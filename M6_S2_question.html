@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 S2実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>実習課題：初めてのn8nワークフローを作って動かそう（5ノード以内・分岐あり）</h1>
+
+<h3>目的</h3>
+<p>セクション1では、自動化したい業務の<strong>要件定義書</strong>を作りました。セクション2では、実際にn8nの画面（キャンバス）を触り、<strong>「ノードを並べて線でつなぐ」</strong>基本操作に慣れます。</p>
+<p>この課題の目的は、<strong>小さくても自分の手で動くワークフローを1つ作ること</strong>です。大きな業務を自動化する必要はありません。<strong>5ノード以内・分岐つき</strong>の小さなプロトタイプを実際に動かして「自分でもできる」という感覚を掴むのがゴールです。</p>
+
+<h3>課題</h3>
+<p>n8nのキャンバス上に、以下の条件を満たす小さなワークフローを作成し、実行して動かしてください。</p>
+<ul>
+<li><strong>ノード数は5個以内</strong>（少ないほど推奨）</li>
+<li><strong>分岐（If または Switch）を1つ以上含む</strong></li>
+<li>すべてのノードが線でつながっていて、実行したら最後まで処理が流れること</li>
+</ul>
+<p>題材（何をするフローか）は<strong>自由</strong>です。業務に関係のない「お試し」で構いません。動画で使った題材を真似てもOKです。</p>
+
+<h3>成果物</h3>
+<ul>
+<li><strong>ワークフロー全体のキャンバス画像</strong> ── すべてのノードが線でつながって見える状態のスクリーンショット</li>
+<li><strong>実行成功時のExecutions画面</strong> ── Executions一覧で「Success」（緑のチェック）が表示されているスクリーンショット</li>
+<li><strong>各ノードの役割メモ</strong> ── 各ノードが「何をするノードか」を1〜2行で説明したもの</li>
+</ul>
+
+<hr>
+
+<h3>手順</h3>
+
+<h4>ステップ① テーマを決める（何をするフローか）</h4>
+<p>n8n内蔵のノード（<strong>Manual Trigger</strong>／<strong>Edit Fields (Set)</strong>／<strong>If</strong>／<strong>Switch</strong>／<strong>Code</strong> など）だけで完結する、ごく簡単な処理を考えます。外部サービス（Gmail／Slack／Geminiなど）と繋いでもOKですが、まず動かすことを優先するなら内蔵ノードだけで十分です。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>テーマの例（内蔵ノードのみで作れるもの）</strong>
+<ul style="margin: 5px 0;">
+<li><strong>時刻で挨拶を分岐</strong>：現在時刻をセット → If（12時より前か？）→ 「おはようございます」or「こんにちは」をセット</li>
+<li><strong>数字の偶奇判定</strong>：適当な数字をセット → If（2で割った余りが0か？）→ 「偶数です」or「奇数です」をセット</li>
+<li><strong>天気で服装を提案</strong>：天気（"晴れ"／"雨"）をセット → Switch → それぞれに合った服装メッセージをセット</li>
+<li><strong>点数でランク分け</strong>：点数をセット → Switch（80以上／50以上／それ以下）→ "A" / "B" / "C" のランクをセット</li>
+</ul>
+</div>
+
+<div style="background: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>テーマの例（動画の題材を真似する場合）</strong>
+<ul style="margin: 5px 0;">
+<li><strong>動画3のGmail→Gemini要約フロー</strong>の縮小版（Gmail/Gemini接続が設定済みの人向け）</li>
+<li><strong>動画4の件名「緊急」分岐フロー</strong>の縮小版</li>
+</ul>
+動画をそのままなぞる場合は、5ノード以内に収まるよう一部を省略してOKです。
+</div>
+
+<h4>ステップ② ワークフローを組む</h4>
+<ol>
+<li>n8nのダッシュボードで「<strong>Create Workflow</strong>」をクリックして新規ワークフローを作成</li>
+<li>最初のノードに <strong>Manual Trigger</strong> を置く（「手動で実行する」スタート地点）</li>
+<li>ステップ①で決めたテーマに沿って、ノードを追加し線でつなぐ</li>
+<li>分岐ノード（If または Switch）の条件を設定する</li>
+<li>各ノードのパラメータ（入力値・条件など）を埋める</li>
+<li>ワークフローに分かりやすい名前を付けて保存する</li>
+</ol>
+
+<h4>ステップ③ 実行する</h4>
+<ol>
+<li>キャンバス下部の「<strong>Test workflow</strong>」または Manual Trigger ノードの「Execute step」をクリック</li>
+<li>各ノードに緑のチェックが付き、最後まで処理が通ることを確認</li>
+<li>左サイドバーの <strong>Executions</strong> をクリックして、今回の実行が「Success」として記録されていることを確認</li>
+</ol>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>エラーで止まったときは</strong>
+<ul style="margin: 5px 0;">
+<li>赤くなったノードをクリックして、エラーメッセージを確認する</li>
+<li>よくある原因：必須項目が未入力／データの参照名（変数名）が間違っている／分岐条件が成立していない</li>
+<li>動画を見直す／AIにエラーメッセージを貼り付けて原因を聞く、で大体解決します（この"デバッグ"自体はセクション6で詳しく扱います）</li>
+</ul>
+</div>
+
+<h4>ステップ④ スクリーンショットを撮って提出</h4>
+<p>以下の2枚を必ず撮ってください。</p>
+<ol>
+<li><strong>キャンバス全体</strong>：ワークフローのすべてのノードが1画面に収まるようにズームアウトした状態。ノード名と線が見えること</li>
+<li><strong>Executions画面</strong>：左サイドバーの Executions を開き、今回の実行が「Success」で表示されている画面</li>
+</ol>
+
+<hr>
+
+<h3>提出物</h3>
+
+<p>以下のテンプレートに内容を入れて提出してください。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.8;">
+■ ワークフロー名：（ここに記入）
+
+■ 作ったフローの説明（3〜5行）：
+（例：現在時刻を取得し、12時より前なら「おはようございます」、
+以降なら「こんにちは」とメッセージをセットするフロー）
+
+■ 各ノードの役割メモ：
+　ノード1（Manual Trigger）：手動でフローを起動する
+　ノード2（Edit Fields）：現在時刻をセットする
+　ノード3（If）：時刻が12時より前かどうかで分岐する
+　ノード4（Edit Fields）：「おはようございます」をセットする
+　ノード5（Edit Fields）：「こんにちは」をセットする
+
+---
+
+■ キャンバス全体のスクリーンショット：
+（すべてのノードが線でつながって見える画面）
+
+■ Executions画面のスクリーンショット：
+（今回の実行が「Success」になっている画面）
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

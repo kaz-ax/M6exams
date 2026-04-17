@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S2実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「n8nの画面に慣れ、ノードを並べて線でつなぐ操作を自分の手で行うこと」</strong>です。</p>
+<p>動画を見ているだけだと「分かった気」になりますが、実際にキャンバスを操作してみると、細かな設定項目や変数の受け渡しなど、見ているだけでは気づかない点がたくさん出てきます。<strong>小さくても自分で動かしたフローが1つある</strong>ことが、セクション3以降の土台になります。</p>
+</div>
+
+<hr>
+
+<h3>n8nの3つの基本要素</h3>
+<p>n8nのワークフローは、以下の3つの要素で成り立っています。</p>
+
+<ul>
+<li><strong>ノード（担当者）</strong>：1つ1つの処理を担当する四角い箱。「メールを取得する」「AIに要約させる」「Slackに投稿する」など、各ノードが役割を持つ。</li>
+<li><strong>ライン（連絡網）</strong>：ノード同士をつなぐ線。前のノードで作ったデータを、次のノードが受け取れるようにする「パイプ」。</li>
+<li><strong>トリガー（合図）</strong>：ワークフローが動き出すきっかけ。「手動で実行（Manual Trigger）」「毎日9時になったら（Schedule Trigger）」「メールを受信したら（Gmail Trigger）」など。</li>
+</ul>
+
+<p>この3つの組み合わせで、どんな業務フローも表現できます。S2では最もシンプルな<strong>「Manual Trigger → いくつかの処理ノード → 分岐」</strong>の形で基礎を掴みます。</p>
+
+<hr>
+
+<h3>回答例：時刻で挨拶を分岐するフロー</h3>
+<p>最もシンプルな例として、「現在時刻を見て挨拶文を変える」フローを組んでみます。ノード5個・分岐1つの構成です。</p>
+
+<div class="example-box">ノード1：Manual Trigger
+　役割：手動でフローを起動する（「Test workflow」ボタンで動く）
+
+ノード2：Edit Fields (Set)
+　役割：現在時刻をデータにセットする
+　設定：nowという名前のフィールドに式 {{ $now.hour }} を入れる
+　（$now はn8nが用意している「今の時刻」を表す変数）
+
+ノード3：If
+　役割：ノード2でセットした時刻が12より小さいかを判定する
+　設定：条件 「{{ $json.now }} < 12」
+　分岐：条件が真なら true側、偽なら false側に進む
+
+ノード4：Edit Fields (Set) ──── Ifのtrue側に接続
+　役割：「おはようございます」という挨拶文をセット
+
+ノード5：Edit Fields (Set) ──── Ifのfalse側に接続
+　役割：「こんにちは」という挨拶文をセット</div>
+
+<p>実行すると、現在時刻に応じてどちらか一方のノード5が実行され、最終的に1つの挨拶文が出力されます。</p>
+
+<hr>
+
+<h3>よくあるつまずきどころ</h3>
+<div class="tip-box">
+<ul>
+<li><strong>ノードが線でつながっていない</strong>：ノードの右端の「○」から次のノードの左端の「○」へドラッグして線を引きます。線がないと次に進みません。</li>
+<li><strong>Ifノードの分岐先が逆</strong>：Ifノードは <strong>true（上）</strong> と <strong>false（下）</strong> に分かれます。どちらに何をつなぐかで結果が変わります。</li>
+<li><strong>変数名のミスマッチ</strong>：前のノードで `now` という名前でセットしたのに、次のノードで `time` と参照しているとデータが拾えません。ノードの出力タブで実際のデータ名を確認しましょう。</li>
+<li><strong>Executionsに何も残らない</strong>：Manual Trigger から実行していない／保存していないワークフローは Executions に記録されない場合があります。一度「Save」してから実行してください。</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>なぜ「小さく動かす」ことが大事なのか</h3>
+<p>本格的な業務ワークフローは、トリガー・外部API・AI呼び出し・エラー処理など多くの要素が絡み合います。最初からそれを組もうとすると、どこで詰まったか分からなくなります。</p>
+<p>まずは<strong>内蔵ノードだけで完結する最小のフロー</strong>を動かし、「ノードがつながる」「データが流れる」「分岐する」という骨格を体感しておくと、セクション3以降で要素が増えても全体像を見失わずに済みます。</p>
+
+<hr>
+
+<h3>実務での活用イメージ</h3>
+<ul>
+<li><strong>S3で「要件定義からの実装」に進む</strong>：S1で作った要件定義書をベースに、n8nで実装するフローを作ります。S2で学んだノード・ライン・分岐の操作が土台になります。</li>
+<li><strong>S4〜S5で「外部APIと繋ぐ」に進む</strong>：今回は内蔵ノードだけでしたが、Gmail・Slack・Gemini などの外部サービスに繋ぐときも、基本は「ノードを並べて線でつなぐ」の延長です。</li>
+<li><strong>S6で「デバッグ」を学ぶ</strong>：今回エラーで止まった受講生は、その時点でS6の予習になっています。Executions画面の見方や、エラーメッセージの読み方を詳しく扱います。</li>
+</ul>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。ノードの使い方や、エラーの解決方法について具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

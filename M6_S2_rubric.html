@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーブリック：M6 S2実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+.check-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.check-table th, .check-table td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+.check-table th { background-color: #f0f0f0; }
+.supplement-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; }
+</style>
+</head>
+<body>
+
+<h1>ルーブリック（採点基準）</h1>
+
+<h3>採点基準</h3>
+<p>合計30点満点で評価します。評価対象は<strong>受講生が組んだワークフローが実際に動いたか</strong>と、<strong>各ノードの役割を自分の言葉で説明できているか</strong>の2点です。テーマ（何をするフローか）の良し悪しは評価しません。</p>
+
+<table class="check-table">
+<tr>
+<th>観点</th>
+<th>OK（満点）</th>
+<th>惜しい（半分程度）</th>
+<th>NG（0点）</th>
+</tr>
+<tr>
+<td><strong>①ワークフロー構築</strong><br>（12点）</td>
+<td>キャンバス画像で、5ノード以内ですべてのノードが線でつながっており、If または Switch による分岐が含まれている。</td>
+<td>つながっていないノードがある、または分岐が含まれていない（直線的なフロー）。ノード数が5個を超えていても減点は軽微。</td>
+<td>キャンバス画像が未提出、または線がほぼ引かれていない。</td>
+</tr>
+<tr>
+<td><strong>②実行の成功</strong><br>（10点）</td>
+<td>Executions画面のスクリーンショットに、今回の実行が「Success」（緑のチェック）として表示されている。</td>
+<td>実行したが赤（エラー）で止まっている、または途中まで実行されている。Executions画面は提出されている。</td>
+<td>Executions画面が未提出、または実行した形跡がない。</td>
+</tr>
+<tr>
+<td><strong>③各ノードの役割メモ</strong><br>（8点）</td>
+<td>使用した全ノードについて「何をするノードか」が1〜2行で自分の言葉で書かれている。</td>
+<td>一部のノードのみ説明されている、またはノード名のコピペのみで役割の説明になっていない。</td>
+<td>未記入。</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>採点の注意事項</h3>
+<div class="supplement-box">
+<p><strong>テーマの良し悪しは評価しません。</strong>「時刻で挨拶を変える」のような、実務に直接関係ないフローでも満点にします。目的はn8nの操作に慣れることであり、ビジネス価値のあるフローを作ることではありません。</p>
+<p><strong>外部サービス連携は任意です。</strong>Gmail／Slack／Geminiなどと繋いでいなくても、内蔵ノード（Manual Trigger／Edit Fields／If／Switch など）だけで構成されていれば満点です。</p>
+<p><strong>ノード数が多少5個を超えていてもOK。</strong>5個以内は推奨値です。学習のためには少ないほど良いですが、7〜8個に膨らんでいても、つながって動いていれば大きく減点しません。</p>
+</div>
+
+<hr>
+
+<h3>フィードバックのポイント</h3>
+<div class="supplement-box">
+<p><strong>高評価のケース：</strong><br>
+キャンバス画像ですべてのノードが線でつながり、分岐が含まれ、Executionsが「Success」になっており、各ノードの役割が自分の言葉で説明されている場合、満点に近い評価です。</p>
+
+<p><strong>改善が必要なケース：</strong><br>
+実行が赤（エラー）で止まっている場合は「エラーメッセージを確認してください。多くは必須項目の未入力か、変数名のミスマッチです。動画を見直すかAIに質問しながら、まず一度 Success まで通してみましょう」とフィードバックします。ノード説明が空欄の場合は「各ノードが何をしているか、短くて構わないので自分の言葉で書いてみてください」と促します。</p>
+
+<p><strong>再提出を求めるケース：</strong><br>
+キャンバス画像またはExecutions画面が未提出の場合、あるいは分岐ノードが含まれていない場合は再提出を依頼してください。分岐はセクション2の学習目標の中核なので、ここでは必ず含めます。</p>
+</div>
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

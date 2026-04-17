@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S3実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「要件定義 → AIにJSONを書かせる → インポート → 調整 → 実行」という、n8n実装の最短ルートを体験すること</strong>です。</p>
+<p>従来の業務自動化は、ノードを1つずつ手で並べて組み立てるのが当たり前でした。しかしAIが成熟した今は、<strong>「要件さえ明確ならコード（JSON）は書いてもらえる」</strong>時代です。人間の役割は、要件を磨くこと・生成物を読んで取捨選択すること・自分の業務に合わせて調整すること、の3つに絞られます。</p>
+</div>
+
+<hr>
+
+<h3>JSONとは何か（ざっくり）</h3>
+<p>JSONは<strong>「システム同士が使う帳票フォーマット」</strong>のようなものです。`{` `}` で囲まれたブロックの中に「キー：値」の組が並んでいる形式で、機械にも人にも読めるように設計されています。</p>
+
+<div class="example-box">{
+  "name": "現在時刻をセット",
+  "type": "n8n-nodes-base.set",
+  "parameters": {
+    "values": {
+      "hour": "={{ $now.hour }}"
+    }
+  }
+}</div>
+
+<p>上の例は「"現在時刻をセット" という名前のSetノードで、hour という変数に今の時刻を入れる」という設定を表しています。<strong>中身の意味を一字一句理解する必要はありません</strong>。「何となくどのノードのことを言っているか分かる」レベルで十分です。</p>
+
+<hr>
+
+<h3>AIにJSONを書かせるコツ</h3>
+<div class="tip-box">
+<p>AIに「n8nのJSONを書いて」とだけ頼むと、外部サービス（Gmail / Slack など）をそのまま使うJSONを出してくることが多い。<strong>この課題では外部接続を避けたい</strong>ので、プロンプトに以下を明示するのがポイントです。</p>
+<ul>
+<li><strong>「Manual Trigger にしてください」</strong>で起動方法を固定する</li>
+<li><strong>「外部サービス接続が必要な部分は Edit Fields (Set) でダミーデータを返す擬似ノードに置き換えて」</strong>と明示する</li>
+<li><strong>「n8nのインポート欄に貼れるJSON全文のみ出力、解説文は不要」</strong>と出力形式を指定する</li>
+<li>長すぎるJSONが返ってきたら <strong>「3〜5ノードにシンプル化して」</strong> と差し戻す</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>回答例：採用市場ニュース要約フローを擬似化して実装</h3>
+
+<h4>AIに投げたプロンプト</h4>
+<div class="example-box">以下の要件定義書に沿って、n8nでそのままインポートして動かせるワークフローのJSONを書いてください。
+
+【条件】
+・トリガーは Manual Trigger にしてください
+・外部サービス接続が必要な部分（RSS取得／Gemini／Slack）は、
+　Edit Fields (Set) でダミーデータを返す擬似ノードに置き換えてください
+・各ノードには日本語で分かりやすい名前を付けてください
+・n8nのインポート欄に貼れるJSON全文のみを出力してください（解説文は不要）
+
+【要件定義書】
+（セクション1で作成した要件定義書の全文）</div>
+
+<h4>AIが生成したJSONの骨格</h4>
+<div class="example-box">1. Manual Trigger（手動起動）
+2. Set: ダミー記事データ（タイトル3件、概要3件）をセット
+3. Set: ダミーAI要約（3行の要約文）をセット
+4. If: 「採用市場 or HRテック」キーワードが含まれるか判定
+5. Set: Slack投稿用メッセージを整形（実際には投稿せずメッセージ文だけ作る）</div>
+
+<h4>パラメータ調整のBefore/After</h4>
+<div class="example-box">調整箇所1：
+　ノード名：Set_ダミー記事データ
+　Before：ダミー記事A／ダミー記事B／ダミー記事C
+　After ：採用市場の求人倍率が2.8倍に上昇／SmartHRがAI分析機能追加／
+        テレワーク推進ガイドライン改定
+
+調整箇所2：
+　ノード名：If_キーワード判定
+　Before：条件「title contains "dummy"」
+　After ：条件「title contains "採用" or title contains "HR"」</div>
+
+<p>調整後に実行すると、If分岐で「採用市場」関連の記事だけが次のノードに流れ、Slack投稿用メッセージが整形されて完成。Executionsに「Success」が記録されます。</p>
+
+<hr>
+
+<h3>よくあるつまずきどころ</h3>
+<div class="tip-box">
+<ul>
+<li><strong>JSONをインポートしたらエラーになった</strong>：AIが出力したJSONに不要なコードブロック記号（` ``` `）が混ざっていることが多い。先頭と末尾の余計な記号を削ってから貼り直す。</li>
+<li><strong>インポートはできたが実行で赤エラー</strong>：AIが既存ワークフローの参照（Node IDなど）を残していることがある。エラーメッセージに従ってIDをリセットするか、該当ノードを削除して作り直す。</li>
+<li><strong>思った通りに分岐しない</strong>：If/Switchの条件式にAIが不正確な参照を書いていることがある。手で条件を設定し直すのが早い。</li>
+<li><strong>ノードが多すぎて全体が把握できない</strong>：AIは時々過剰にノードを作る。不要なものは削除して、自分が理解できる規模（5〜7ノード）に絞ると学習効果が高い。</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>この方法の価値と注意点</h3>
+<p><strong>価値</strong>：要件定義ができていれば、実装時間は<strong>数時間 → 数十分</strong>に短縮できる。しかも「AIに書かせる → 読んで直す」の繰り返しで、徐々にJSONやノード構成の理解も進む。</p>
+<p><strong>注意点</strong>：AIの生成したJSONを<strong>何も読まずにそのまま動かすのは危険</strong>。後でバグが出ても原因を追えなくなる。必ず<strong>自分で中身を理解できるレベル</strong>まで削る・書き換える意識を持つこと。</p>
+
+<hr>
+
+<h3>実務での活用イメージ</h3>
+<ul>
+<li><strong>S4で外部APIと繋ぐ</strong>：今回は擬似Setノードで済ませた外部接続を、セクション4で本物のGmail／Slack／Gemini等に置き換えます。すでにフロー全体が動いている状態から外部接続を差し込むだけなので、スムーズに進みます。</li>
+<li><strong>業務の自動化提案</strong>：要件定義書＋AIが書いたJSON＋簡易デモが30分で揃うので、上司やチームに「こういう自動化が可能です」と提案しやすくなる。</li>
+<li><strong>テンプレート化</strong>：1つうまく動いたフローを保存しておけば、似た業務を自動化するときの出発点として使い回せる。</li>
+</ul>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。プロンプトの書き方や、インポートエラーの解決方法について具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

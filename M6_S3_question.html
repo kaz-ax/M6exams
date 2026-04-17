@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 S3実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>実習課題：要件定義書からAIにn8nフローを書かせ、動かしてみよう</h1>
+
+<h3>目的</h3>
+<p>セクション1で作った<strong>要件定義書</strong>を、いよいよ実際のn8nワークフローに変えていきます。ゼロからノードを並べて組むのではなく、<strong>AIにn8n用のJSON（設計図）を書いてもらい、それをインポートして動かす</strong>という方法を体験します。</p>
+<p>この方法のポイントは、<strong>「作業の大部分をAIに任せ、人間は要件の明確化とパラメータ調整に集中する」</strong>こと。要件定義さえしっかりしていれば、実装の時間は数十分に短縮できます。</p>
+<p>この課題の目的は、<strong>①AIにJSONを書かせる</strong>／<strong>②インポートしてキャンバスで中身を確認</strong>／<strong>③自分の業務に合わせてパラメータを微調整</strong>／<strong>④実行成功</strong>という一連の流れを、自分の手で1周することです。</p>
+
+<h3>課題</h3>
+<p>セクション1で作成した<strong>自分の要件定義書</strong>をベースに、AIにn8n用のワークフローJSONを生成させてください。それをn8nにインポートし、必要な箇所のパラメータを自分の業務に合わせて調整したうえで、実行成功まで持っていってください。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>外部サービス接続はまだしなくてOK</strong><br>
+Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格的に扱います。セクション3では、<strong>外部接続が必要な部分を内蔵ノード（Edit Fields / Set）で擬似的に置き換えて</strong>実行してください。AIへの依頼文にもその旨を書きます（後述のプロンプト例参照）。
+</div>
+
+<h3>成果物</h3>
+<ul>
+<li><strong>AIに投げたプロンプト</strong> ── 要件定義書＋JSON生成依頼の全文</li>
+<li><strong>AIが生成したJSON</strong> ── コピー可能な形で貼り付け（長ければ先頭〜末尾を抜粋＋行数記載でも可）</li>
+<li><strong>インポート後のキャンバス画像</strong> ── n8nにJSONを貼り付けた直後の状態</li>
+<li><strong>パラメータ調整のBefore/After</strong> ── 1〜2箇所、どこを何に変えたかを記述</li>
+<li><strong>Executions「Success」画面</strong> ── 実行成功したことがわかるスクリーンショット</li>
+<li><strong>振り返り</strong> ── 3〜5行の短い感想（何が便利だったか／どこでつまずいたか）</li>
+</ul>
+
+<hr>
+
+<h3>手順</h3>
+
+<h4>ステップ① AI（ChatGPT／Gemini）にJSONを書かせる</h4>
+<p>セクション1で作った要件定義書を貼り付けて、以下のようなプロンプトでJSONを生成してもらいます。</p>
+
+<div style="background: #f5f5f5; border-left: 4px solid #666; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>AIへのプロンプトの例</strong><br><br>
+以下の要件定義書に沿って、<strong>n8nでそのままインポートして動かせるワークフローのJSON</strong>を書いてください。<br><br>
+【条件】<br>
+・トリガーは Manual Trigger にしてください（手動で Test workflow を押すと動く形）<br>
+・外部サービス接続が必要な部分（Gmail / Slack / Gemini API など）は、今回は実際に接続しません。代わりに<strong>Edit Fields (Set) ノードでダミーデータを返す擬似ノード</strong>に置き換えてください<br>
+・分岐がある場合は If または Switch ノードで実装してください<br>
+・各ノードには日本語で分かりやすい名前を付けてください<br>
+・最後に、n8nのインポート欄に貼れるJSON全文のみを出力してください（解説文は不要）<br><br>
+【要件定義書】<br>
+（ここにセクション1で作った要件定義書の全文を貼り付け）
+</div>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>うまくJSONが生成されないときは</strong>
+<ul style="margin: 5px 0;">
+<li>AIの出力が途中で切れた → 「続けて」と伝える。または「もっとシンプルに、3〜5ノードに収めて」と指示</li>
+<li>JSONの形式が壊れている → 「n8nにそのままインポートできる有効なJSON形式で出し直して」と差し戻す</li>
+<li>AIが外部サービスをそのまま使おうとする → 「SlackやGmailなどのノードは使わず、Edit Fields (Set) で置き換えて」と再指示</li>
+</ul>
+</div>
+
+<h4>ステップ② n8nにインポートする</h4>
+<ol>
+<li>n8nで新しいワークフローを作成（「Create Workflow」）</li>
+<li>キャンバス右上の「…」メニュー → <strong>「Import from File」または「Import from Clipboard」</strong> を選択</li>
+<li>AIが生成したJSONを貼り付けてインポート</li>
+<li>キャンバスにノードが並び、線でつながっていることを確認</li>
+<li>ワークフローに分かりやすい名前を付けて保存</li>
+</ol>
+
+<h4>ステップ③ パラメータを自分の業務に合わせて調整する</h4>
+<p>AIが書いたJSONは、あくまで<strong>要件定義の"たたき台"</strong>です。キャンバス上のノードを1つずつクリックして中身を見て、<strong>自分の業務に合うように1〜2箇所パラメータを書き換えて</strong>ください。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>書き換えの候補例</strong>
+<ul style="margin: 5px 0;">
+<li>擬似Setノードのダミー値を、<strong>実際の業務でありえそうな具体的なデータ</strong>に書き換える（例：ダミーの記事タイトル → 自社プロダクトの事例タイトル）</li>
+<li>If / Switch の分岐条件を、自分の業務の実際のルールに合わせる（例：「金額 &gt; 10000 なら要承認」）</li>
+<li>メッセージ文言や件名を、実際のチームで使う表現に書き換える</li>
+<li>Set ノードでセットする変数名を、自分の用語に合わせる</li>
+</ul>
+必ず<strong>調整前（Before）と調整後（After）の値</strong>を控えてください（提出に使います）。
+</div>
+
+<h4>ステップ④ 実行して「Success」にする</h4>
+<ol>
+<li>「Test workflow」または Manual Trigger の「Execute step」で実行</li>
+<li>すべてのノードに緑のチェックが付くことを確認</li>
+<li>Executions画面でSuccessとして記録されていることを確認</li>
+<li>エラーで止まった場合は、赤くなったノードのメッセージを確認して修正、または AI にエラー内容を貼って相談</li>
+</ol>
+
+<hr>
+
+<h3>提出物</h3>
+
+<p>以下のテンプレートに内容を入れて提出してください。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.8;">
+■ ワークフロー名：（ここに記入）
+
+---
+
+■ AIに投げたプロンプト（全文）：
+（要件定義書＋JSON生成依頼の全文を貼り付け）
+
+---
+
+■ AIが生成したJSON：
+（長い場合は、先頭〜末尾の一部と「全体で○○行」を記載でもOK）
+
+---
+
+■ インポート後のキャンバス画像：
+（AIが生成したJSONをインポートした直後の、ノードが並んだキャンバス全体）
+
+---
+
+■ パラメータ調整のBefore/After：
+　調整箇所1：
+　　ノード名：（例：Set_記事タイトル）
+　　Before：（例：「ダミー記事A」）
+　　After：（例：「競合B社の新サービスローンチ」）
+
+　調整箇所2：（あれば）
+　　ノード名：
+　　Before：
+　　After：
+
+---
+
+■ Executions「Success」画面：
+（実行が成功したことがわかるスクリーンショット）
+
+---
+
+■ 振り返り（3〜5行）：
+（例：要件定義書があればAIがほぼ骨組みを作ってくれる実感を得られた。
+一方、AIが勝手に追加した不要なノードもあり、自分で中身を読んで取捨選択する
+必要があることが分かった。次のセクションで外部サービスに繋ぐのが楽しみ。）
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

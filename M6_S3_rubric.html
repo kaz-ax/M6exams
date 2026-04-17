@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーブリック：M6 S3実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+.check-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.check-table th, .check-table td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+.check-table th { background-color: #f0f0f0; }
+.supplement-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; }
+</style>
+</head>
+<body>
+
+<h1>ルーブリック（採点基準）</h1>
+
+<h3>採点基準</h3>
+<p>合計30点満点で評価します。評価対象は<strong>AIへの依頼の仕方</strong>、<strong>生成物をn8nで動かせたか</strong>、<strong>自分の業務に合わせて微調整したか</strong>、<strong>振り返りを書いたか</strong>の4点です。AIが生成したJSONそのものの品質は評価しません（AIの出力を読んで使える人間側の力を見ます）。</p>
+
+<table class="check-table">
+<tr>
+<th>観点</th>
+<th>OK（満点）</th>
+<th>惜しい（半分程度）</th>
+<th>NG（0点）</th>
+</tr>
+<tr>
+<td><strong>①AIへのプロンプト設計</strong><br>（8点）</td>
+<td>要件定義書が貼り付けられており、かつ「Manual Triggerにする」「外部接続はSetで擬似化」「JSON全文のみ出力」といった条件指定が含まれている。</td>
+<td>要件定義書は貼ってあるが、条件指定が欠けており、AIが外部サービスノードをそのまま出してしまった／解説文を含んだ出力になっている。</td>
+<td>プロンプト未提出、またはAIへの指示が「JSONを書いて」だけで要件定義書がない。</td>
+</tr>
+<tr>
+<td><strong>②インポート＆実行の成功</strong><br>（10点</td>
+<td>インポート後のキャンバス画像と、Executions「Success」画面の両方が提出されており、ワークフローが最後まで通っている。</td>
+<td>インポートはできているが実行が赤（エラー）で止まっている／キャンバス画像はあるがExecutions未提出。</td>
+<td>インポートできていない、または実行した形跡がない。</td>
+</tr>
+<tr>
+<td><strong>③パラメータ調整</strong><br>（7点）</td>
+<td>1〜2箇所以上のBefore/Afterが具体的に書かれており、ダミー値から自分の業務に寄せた具体的な値に変更している。</td>
+<td>調整箇所は書かれているが、値の変更が軽微（例：文言の体裁のみ）で業務固有の内容になっていない。</td>
+<td>調整のBefore/Afterが未記入、またはAI生成のまま一切手を入れていない。</td>
+</tr>
+<tr>
+<td><strong>④振り返り</strong><br>（5点）</td>
+<td>3〜5行で、何が便利だったか・どこでつまずいたか・次に活かしたいことが自分の言葉で書かれている。</td>
+<td>1〜2行の感想のみ／「勉強になった」などの抽象的な記述のみ。</td>
+<td>未記入。</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>採点の注意事項</h3>
+<div class="supplement-box">
+<p><strong>AIが生成したJSONの品質は評価しません。</strong>AIの出力が冗長だったり一部が不正確でも、受講生が調整して最終的にSuccessまで持っていけていれば満点対象です。大事なのは「AIの出力を人間が使いこなせたか」です。</p>
+<p><strong>外部サービス接続の有無は評価しません。</strong>Gmail / Slack / Gemini などを実際に繋いでいなくても、Setノードでの擬似化で動いていればOKです。外部接続はセクション4で本格的に扱います。</p>
+<p><strong>ノード数の多少は評価対象外です。</strong>3ノードでも10ノードでも、通って動いていれば可。ただし振り返りで「多すぎて理解が追いつかなかった」などの記述があれば学びとして評価します。</p>
+</div>
+
+<hr>
+
+<h3>フィードバックのポイント</h3>
+<div class="supplement-box">
+<p><strong>高評価のケース：</strong><br>
+プロンプトに要件定義書と条件指定の両方が含まれ、インポート後のキャンバスと Success 画面の両方が提出され、パラメータ調整のBefore/Afterが業務固有の内容に具体的に書き換えられており、振り返りで「AIの生成物をどこまで信頼するか」といった実践的な気づきが書かれている場合、満点に近い評価です。</p>
+
+<p><strong>改善が必要なケース：</strong><br>
+エラーで止まっている場合は「エラーメッセージをAIに貼って原因を聞いてみましょう。特にインポート直後のエラーは、JSON先頭の ` ``` ` 記号が残っていることが多いです」とフィードバックします。パラメータ調整が軽微な場合は「ダミー値ではなく、実際の業務でありそうなデータに書き換えるとS4以降で実装する際の手戻りが減ります」と促します。</p>
+
+<p><strong>再提出を求めるケース：</strong><br>
+AIに投げたプロンプトが未提出、インポート後のキャンバス画像またはExecutions画面が未提出の場合は再提出を依頼してください。特にプロンプトは「AIをどう使ったか」が本課題の核なので、必ず全文を提出させます。</p>
+</div>
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S5実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「部分の動作確認」から「全体の通し動作」に視点を広げること</strong>です。</p>
+<p>ここまでのセクションでは、ノード単位・処理単位で「動くこと」を確かめてきました。S5では、<strong>定時に自動で動き出し、情報を集め、AIで加工し、配信する</strong>という一連の流れを、<strong>1本のワークフローとして完結</strong>させます。これができると、作ったエージェントは<strong>業務の一部として本当に回り始める</strong>ようになります。</p>
+</div>
+
+<hr>
+
+<h3>AIエージェントの4要素</h3>
+<p>業務で使われているAIエージェントは、だいたい以下の4つのブロックでできています。</p>
+
+<ul>
+<li><strong>① トリガー（起動の合図）</strong>：いつ動き出すか。Schedule（定時）／Webhook（イベント受信）／Manual（手動）など。</li>
+<li><strong>② 情報収集（インプット）</strong>：どこから何を取ってくるか。RSS／API／スプシ／メール受信箱など。</li>
+<li><strong>③ AI処理（加工）</strong>：取ってきた情報を要約・分類・抽出・判定する。Gemini／OpenAIノード。</li>
+<li><strong>④ 配信／記録（アウトプット）</strong>：人が使える形にして届ける／記録する。Slack／Gmail／スプシ／X／DBなど。</li>
+</ul>
+
+<p>S5では、この4要素すべてを1本に繋いでエージェントを完成させます。どれか1つでも欠けると「業務で役立つエージェント」にはなりません。</p>
+
+<hr>
+
+<h3>RSSを情報源に選ぶ理由</h3>
+<p>動画1〜2で RSS を題材にしたのには理由があります。</p>
+<ul>
+<li><strong>認証が要らない／ほぼ無料</strong>：公開RSSはキーなしで誰でも取得できる</li>
+<li><strong>形式が標準化されている</strong>：サイトごとに書き方が違うWebページと違って、RSSはフォーマットが決まっている</li>
+<li><strong>更新差分が取りやすい</strong>：最新記事だけを抜き出す処理が簡単</li>
+<li><strong>AIと相性が良い</strong>：タイトル・本文抜粋がテキストで得られるので、そのまま要約に回せる</li>
+</ul>
+
+<p>同じパターン（定時起動 → 情報取得 → AI加工 → 配信）は、API／社内データベース／メール／ファイルシステムなど、<strong>他の情報源にもそのまま応用</strong>できます。RSSは"練習用"として理想的な入り口です。</p>
+
+<hr>
+
+<h3>結合テストとは</h3>
+<div class="tip-box">
+<p><strong>結合テスト（Integration Test）</strong>は、部分ではなく<strong>全体を通しで動かす</strong>テストのことです。ソフトウェア開発の世界では昔からある概念ですが、ワークフロー開発でも全く同じ発想が必要です。</p>
+<p>個別ノードの「Execute step」で1つずつ確認すると「動いた」と思っても、実際に全体を流すと<strong>ノード間のデータ受け渡しで詰まる</strong>ことが頻繁にあります。例えば：</p>
+<ul>
+<li>RSSノードは複数件の記事を返すが、AIノードは1件しか処理しない設定になっていた</li>
+<li>AIの出力が期待するフィールド名と配信ノードの参照名がずれている</li>
+<li>途中でnull値が出て配信ノードが失敗する</li>
+</ul>
+<p>これらは<strong>通しで実行して初めて見える不具合</strong>です。「Test workflow」でエンドツーエンドを回す習慣をつけましょう。</p>
+</div>
+
+<hr>
+
+<h3>回答例：TechCrunch → Gemini 3行要約 → Slack 配信</h3>
+
+<h4>フロー構成</h4>
+<div class="example-box">1. Schedule Trigger
+   - 設定：毎日 9:00 AM JST に起動
+
+2. RSS Feed Read
+   - URL: https://techcrunch.com/feed/
+   - 最新5件を取得
+
+3. Gemini（または OpenAI）
+   - モデル：gemini-1.5-flash（軽量モデルで十分）
+   - プロンプト：
+     「以下の記事タイトルと本文の一部をもとに、3行以内で要約してください。
+      1行目：何のニュースか
+      2行目：どう変わったか／何が起きたか
+      3行目：なぜ重要か
+      敬体で、専門用語を避けてください。
+      記事データ：{{ $json }}」
+
+4. Slack（Post Message）
+   - Channel: #ai-daily
+   - Text: 「📰 今日のAIニュース\n\n{{ $json.summary }}\n\n🔗 {{ $json.link }}」
+   - Credentials: Slack_BotToken を参照</div>
+
+<h4>配信先 Slack に届く例</h4>
+<div class="example-box">📰 今日のAIニュース
+
+OpenAIが推論特化の新モデル「o1-mini」を開発者向けに一般公開しました。
+従来モデル比で数学・コーディングタスクが3倍速く動作し、コストも60%削減。
+エージェント系プロダクトへの採用が加速する見通しです。
+
+🔗 https://techcrunch.com/2026/04/18/...</div>
+
+<hr>
+
+<h3>よくあるつまずきどころ</h3>
+<div class="tip-box">
+<ul>
+<li><strong>RSSが複数件取れるのにAIが1件しか処理しない</strong>：AIノードが「Run Once for Each Item（各アイテムごとに実行）」設定になっていないことが多い。ノードの設定で切り替える。</li>
+<li><strong>RSSの本文が空</strong>：サイトによってはRSSにタイトル＋リンクだけで本文を含まないことがある。その場合は HTTP Request で記事URLを叩いて中身を取得する or タイトルだけで要約させる。</li>
+<li><strong>Slackで401エラー</strong>：Botトークンの権限不足。Slack App 設定で `chat:write` や `channels:join` を追加。</li>
+<li><strong>Schedule Trigger が時差で動かない</strong>：タイムゾーン設定に注意。n8n Cloudは UTC デフォルト／ Settings でJST に切り替え可能。</li>
+<li><strong>Googleスプシに書けない</strong>：スプシのOAuth認証が切れている or 対象スプシにアクセス権がない。Credentialsを再認証する。</li>
+<li><strong>要約が3行を超える</strong>：プロンプトで「絶対に3行以内」「1行は50文字以内」など強い制約をかける。</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>"本番運用"に近づけるコツ</h3>
+<ul>
+<li><strong>エラー時の通知</strong>：ワークフロー全体が失敗したとき、自分にDMが飛ぶようにErrorワークフローを設定する（S6で扱う）</li>
+<li><strong>重複投稿の防止</strong>：前回取得した記事URLを Google Sheets に記録し、次回は差分のみ投稿する</li>
+<li><strong>配信内容のA/Bテスト</strong>：プロンプトを少し変えた要約を数日並行運用し、チームのフィードバックで磨く</li>
+<li><strong>コスト監視</strong>：AIノードの呼び出し回数が増えると課金も増える。Schedule頻度と1回あたりの記事数でコスト試算しておく</li>
+</ul>
+
+<hr>
+
+<h3>実務での活用イメージ</h3>
+<ul>
+<li><strong>朝会の資料を自動で1枚</strong>：社内Wiki・営業数値・競合ニュースを集めて朝会用のSlack投稿を毎日8:45に</li>
+<li><strong>採用の応募対応</strong>：応募フォーム（Webhook）→ AIで応募内容分類 → 担当者のSlackに自動アサイン通知</li>
+<li><strong>カスタマーサポート</strong>：問い合わせメール → AIで優先度判定 → 高優先度だけSlackの#alert に通知</li>
+<li><strong>週次レポート</strong>：社内DBとSalesforceから数値取得 → AIでハイライト生成 → 経営層向けメールで毎週月曜配信</li>
+</ul>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。エンドツーエンドで詰まった点や、配信先の設定について具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

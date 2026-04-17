@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 S5実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>実習課題：定時に動く情報収集・要約・配信エージェントを完成させよう</h1>
+
+<h3>目的</h3>
+<p>セクション1〜4で、要件定義・n8nの基本操作・外部API連携・認証管理を学びました。セクション5では、それらを組み合わせて<strong>「定時に自動で動き、情報を集め、AIで要約し、配信までする」</strong>一連のエージェントを1本完成させます。</p>
+<p>ここまでの課題は「部分を動かす」でした。セクション5は<strong>「全体を通しで動かす」</strong>。動画3で学んだ<strong>結合テスト</strong>（エンドツーエンドの通しリハーサル）まで実施し、自分の手で作ったエージェントが<strong>業務で使えるレベル</strong>に達することを体感するのが目的です。</p>
+
+<h3>課題</h3>
+<p>以下の要素をすべて満たす<strong>1本のワークフロー</strong>を作成し、結合テストを通して実行成功まで持っていってください。</p>
+<ul>
+<li><strong>Schedule Trigger</strong>（毎日◯時／毎週◯曜日など、定時起動の設定）</li>
+<li><strong>情報収集ノード</strong>：RSS Feed Read ノード（推奨）または HTTP Request ノードで外部から情報を取得</li>
+<li><strong>AI要約ノード</strong>：Gemini または OpenAI で取得データを<strong>3行以内に要約</strong>（件数が多ければ複数件でOK）</li>
+<li><strong>配信ノード</strong>：<strong>Slack／Gmail／Google Sheets／X</strong> のいずれか1つに結果を実際に投稿／転記</li>
+<li><strong>Credentials管理</strong>：AI・配信先の認証情報はすべて Credentials 機能で管理（直書きNG）</li>
+<li><strong>結合テスト成功</strong>：Executionsで「Success」として記録されている</li>
+</ul>
+
+<h3>成果物</h3>
+<ul>
+<li><strong>エージェントのコンセプト</strong> ── 何の情報を集めてどこに配信するか（3〜5行）</li>
+<li><strong>ワークフロー全体のキャンバス画像</strong></li>
+<li><strong>Schedule Trigger の設定画面</strong> ── 実行スケジュール（cron式または頻度選択）が見える画面</li>
+<li><strong>Executions「Success」画面</strong> ── Manual実行でエンドツーエンドが通った証跡</li>
+<li><strong>配信先に実際に投稿／転記された様子のスクリーンショット</strong> ── Slackチャンネル／Gmail受信箱／スプシの行／Xの投稿 のいずれか</li>
+<li><strong>振り返り</strong> ── 3〜5行（結合テストで詰まった点／業務で使えそうな応用案）</li>
+</ul>
+
+<hr>
+
+<h3>手順</h3>
+
+<h4>ステップ① エージェントのコンセプトを決める</h4>
+<p>「何の情報を／どれくらいの頻度で／どこに届けるか」を一言で言えるようにします。S1で作った要件定義書の業務をそのまま実装してもOK、S4でAPI連携を練習したテーマを発展させてもOKです。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>コンセプトの例</strong>
+<ul style="margin: 5px 0;">
+<li><strong>朝のAIニュースブリーフィング</strong>：TechCrunch／ITmediaのRSS → Geminiで3行要約 → Slack #ai-daily に毎朝9時投稿</li>
+<li><strong>競合調査エージェント</strong>：競合3社の公式ブログRSS → 新着記事の要点をAI抽出 → Google Sheets に日付入り行で追記</li>
+<li><strong>業界トレンド週報</strong>：Qiita API で特定タグの人気記事 → AIで週次傾向コメント → 毎週月曜にGmailで自分宛に送信</li>
+<li><strong>採用市場モニタリング</strong>：HRテック系RSS → AIで自社事業に関連する記事だけ抽出 → Slack #人事定例 に投稿</li>
+</ul>
+</div>
+
+<h4>ステップ② Schedule Trigger を設定する</h4>
+<ol>
+<li>新規ワークフローを作成</li>
+<li>最初のノードに <strong>Schedule Trigger</strong> を配置</li>
+<li>「Trigger Interval」で起動頻度を設定（例：Every Day at 9:00／Every Monday at 10:00 など）</li>
+<li>保存して、スケジュール設定画面のスクショを撮っておく</li>
+</ol>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>テストのコツ</strong><br>
+Schedule Triggerが設定時刻に実際に動くのを待つ必要はありません。提出時は<strong>Manual実行（Test workflow）でエンドツーエンドの動作を確認</strong>すればOKです。Schedule設定はあくまで「本番稼働時に自動で動く状態」を作るためのもの。
+</div>
+
+<h4>ステップ③ 情報収集ノードを追加する</h4>
+<p>推奨は <strong>RSS Feed Read</strong> ノード（RSSのURLを指定するだけで最新記事一覧を取得）。RSSの代わりに HTTP Request で公開APIを叩くのでも構いません。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>使いやすい日本語RSSの例</strong>
+<ul style="margin: 5px 0;">
+<li>ITmedia NEWS：<code>https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml</code></li>
+<li>TechCrunch Japan（英語版は停止していますがグローバル版は有効）：<code>https://techcrunch.com/feed/</code></li>
+<li>はてなブックマーク テクノロジー人気：<code>https://b.hatena.ne.jp/hotentry/it.rss</code></li>
+<li>各企業の公式ブログ／プレスリリース（サイトによってRSS提供あり）</li>
+</ul>
+</div>
+
+<h4>ステップ④ AIで3行要約させる</h4>
+<p>取得した記事群を Gemini または OpenAI に渡して要約します。プロンプトで出力形式を明示するのがコツ。</p>
+
+<div style="background: #f5f5f5; border-left: 4px solid #666; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>AIへのプロンプト例</strong><br><br>
+以下の記事タイトルと本文の一部をもとに、<strong>3行以内</strong>の要約を作ってください。<br>
+・1行目：何のニュースか（対象／主語）<br>
+・2行目：どう変わったか／何が起きたか<br>
+・3行目：なぜ重要か、影響<br><br>
+専門用語は避け、業務で使える敬体で書いてください。<br><br>
+【記事データ】<br>
+{{ $json }}
+</div>
+
+<h4>ステップ⑤ 配信先ノードを追加する</h4>
+<p>以下から1つ選んで実装します。どれも n8n に専用ノードがあり、Credentialsを登録すれば動きます。</p>
+<ul>
+<li><strong>Slack</strong>：指定チャンネルにメッセージ投稿（Slack Appでトークン発行が必要）</li>
+<li><strong>Gmail</strong>：自分宛／チームアドレスにメール送信</li>
+<li><strong>Google Sheets</strong>：指定スプレッドシートに行追加（日付・タイトル・要約を列に並べる形）</li>
+<li><strong>X (Twitter)</strong>：投稿（API従量課金登録が必要／難度高）</li>
+</ul>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>配信先を自分だけに絞るのが安全</strong><br>
+テスト段階では、Slackなら自分専用チャンネル／Gmailなら自分宛／スプシなら自分のテスト用シートにしておきましょう。誤配信を避けるため、関係者が見るチャンネルやMLには<strong>動作確認後</strong>に向け先を変えるのが定石です。
+</div>
+
+<h4>ステップ⑥ 結合テストを実施する</h4>
+<p>部分ではなく<strong>通しで</strong>動くことを確認します。動画3の「結合テスト」のポイントは以下：</p>
+<ol>
+<li>各ノードを個別に「Execute step」して、出力が想定通りかを1つずつ確認</li>
+<li>その後 <strong>ワークフロー全体を「Test workflow」で一気通貫実行</strong></li>
+<li>Executionsで「Success」になっており、配信先に実際に投稿／転記されていることを確認</li>
+<li>エラーで止まったノードがあれば、S6（デバッグ）の知識を先取りしてエラーメッセージを読み、修正して再実行</li>
+</ol>
+
+<hr>
+
+<h3>提出物</h3>
+
+<p>以下のテンプレートに内容を入れて提出してください。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.8;">
+■ エージェント名：（ここに記入）
+
+■ コンセプト（3〜5行）：
+　何の情報を：（例：TechCrunchのRSSから最新AI系ニュース5件）
+　どれくらいの頻度で：（例：毎朝9時）
+　どこに配信：（例：Slack #ai-daily チャンネル）
+　なぜ作ったか：（例：毎朝の情報収集を自動化したい）
+
+---
+
+■ ワークフロー全体のキャンバス画像：
+（Schedule Trigger → RSS/API → AI → 配信 の流れが見える状態）
+
+■ Schedule Trigger の設定画面：
+（Trigger Intervalで「毎日9時」などが設定されている画面）
+
+■ Executions「Success」画面：
+（Manual実行でエンドツーエンドが通ったExecutions）
+
+■ 配信先に実際に届いた様子のスクリーンショット：
+（Slackチャンネル／Gmail受信箱／スプシの行／Xの投稿 のいずれか）
+
+---
+
+■ 使用したCredentials一覧：
+（名前のみ列挙でOK。例：Gemini_MyKey、Slack_BotToken）
+
+---
+
+■ 振り返り（3〜5行）：
+（例：結合テストで、RSSの1件目だけ要約して2件目以降を忘れる動きが出た。
+ループ設定が抜けていたのが原因。1つずつ個別テストしたときは気づけず、
+エンドツーエンドで回して初めて発見できたのが学びだった。
+次は自社の競合ブログのRSSに変えて本番運用してみたい。）
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

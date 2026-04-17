@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーブリック：M6 S5実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+.check-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.check-table th, .check-table td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+.check-table th { background-color: #f0f0f0; }
+.supplement-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; }
+</style>
+</head>
+<body>
+
+<h1>ルーブリック（採点基準）</h1>
+
+<h3>採点基準</h3>
+<p>合計30点満点で評価します。評価対象は<strong>4要素（トリガー／情報収集／AI要約／配信）すべてが通しで動いたか</strong>、そして<strong>配信先に実際に届いたか</strong>です。選んだテーマ・配信先の種類の良し悪しは評価しません。</p>
+
+<table class="check-table">
+<tr>
+<th>観点</th>
+<th>OK（満点）</th>
+<th>惜しい（半分程度）</th>
+<th>NG（0点）</th>
+</tr>
+<tr>
+<td><strong>①情報収集ノード</strong><br>（6点）</td>
+<td>RSS Feed Read または HTTP Request で<strong>実際に外部から情報が取得できている</strong>（ノードのOutputに複数件または実データが入っている）。</td>
+<td>情報収集ノードは置かれているが実行でエラー、または固定値をSetで返すだけで外部通信していない。</td>
+<td>情報収集ノードが存在しない、または未実行。</td>
+</tr>
+<tr>
+<td><strong>②AI要約</strong><br>（8点）</td>
+<td>Gemini/OpenAIノードで<strong>取得したデータを3行以内の要約に加工</strong>している。出力サンプルが提出物に貼られており、プロンプトの指示通りの形式になっている。</td>
+<td>AIノードは動いているが、出力が3行を大きく超える／取得データをほぼオウム返ししている／出力サンプル未提出。</td>
+<td>AIノードが使われていない、または実行エラーで止まっている。</td>
+</tr>
+<tr>
+<td><strong>③配信／実投稿</strong><br>（10点）</td>
+<td>Slack／Gmail／Google Sheets／X のいずれかに<strong>実際に投稿・転記された様子のスクリーンショット</strong>が提出されている。配信ノードの実行が Success。</td>
+<td>配信ノードは置かれているが、配信先スクショが未提出。または配信ノードだけ赤エラーで止まっている。</td>
+<td>配信ノードが存在しない、または Set ノードで「配信するフリ」をしているだけで実外部投稿していない。</td>
+</tr>
+<tr>
+<td><strong>④結合テスト（エンドツーエンド動作）</strong><br>（6点）</td>
+<td>Schedule Trigger が設定されている（設定画面のスクショ提出）。かつManual実行でSuccessのExecutionsが記録されている（スクショ提出）。振り返りで「通しで動かして気づいたこと」が書かれている。</td>
+<td>Schedule Trigger 未設定／Executionsスクショ未提出／振り返りが1〜2行で気づきなし。</td>
+<td>Schedule Trigger 未設定、かつ結合実行の証跡もない。</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>採点の注意事項</h3>
+<div class="supplement-box">
+<p><strong>配信先の種類は評価しません。</strong>Slackでもメールでもスプシでも、実際に届いていれば満点対象です。Xは難度が高く任意扱い。</p>
+<p><strong>テーマの業務関連性は評価しません。</strong>業務と直接関係のない題材（趣味系ブログのRSSなど）でも、4要素が揃って動けばOKです。</p>
+<p><strong>Schedule Triggerの実際の発火は待ちません。</strong>「設定されている」「Manual実行でSuccess」の2点で結合テストは成立とみなします。</p>
+<p><strong>重複投稿防止・エラーハンドリングは求めません。</strong>"本番運用"に近づけるコツは解説に記載しましたが、S5では必須要素にしません。S6以降の応用枠です。</p>
+<p><strong>セキュリティ違反（APIキー直書き・スクショにキー映る）は重点減点。</strong>①〜③の該当項目を0点にするとともに、Credentials機能の再設定を促してください。</p>
+</div>
+
+<hr>
+
+<h3>フィードバックのポイント</h3>
+<div class="supplement-box">
+<p><strong>高評価のケース：</strong><br>
+4要素が揃って通しで動いており、配信先のスクショで実際に届いていることが確認でき、振り返りで「結合テストで初めて見えた不具合」や「業務への応用案」が具体的に書かれている場合、満点に近い評価です。</p>
+
+<p><strong>改善が必要なケース：</strong><br>
+AI要約が3行を大きく超えている場合は「プロンプトで『絶対に3行以内／1行50字以内』など強い制約を入れると改善します」と促します。結合テストで赤エラーが出た場合は「どのノードで・どんなデータで止まったかをエラーメッセージから読み取るとS6のデバッグ演習の予習になります」と伝えます。</p>
+
+<p><strong>再提出を求めるケース：</strong><br>
+配信先スクショが未提出の場合／Set ノードで擬似配信しているだけで実投稿していない場合は再提出を依頼してください。S5の核は「実際にエージェントが配信先まで到達して業務で使える状態になっている」ことです。</p>
+</div>
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

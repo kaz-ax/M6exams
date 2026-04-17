@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S1実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「AIエージェントを作り始める前に、要件定義という土台を作ること」</strong>です。</p>
+<p>モジュール5では、あらかじめ決まった業務を題材にBotやワークフローを作りました。モジュール6からは、自分の業務を対象にするため、<strong>「何を・どんな順番で・どう動かすか」を自分で言語化する</strong>必要があります。これを<strong>要件定義</strong>と呼びます。</p>
+<p>要件定義が曖昧だと、AIエージェントは思ったように動きません。逆に、要件定義がしっかりしていれば、実装（S2〜S5で学ぶn8nでの組み立て）はスムーズに進みます。</p>
+</div>
+
+<hr>
+
+<h3>要件定義の5要素</h3>
+<p>AIエージェントの要件定義は、以下の5つを明確にすることで成り立ちます。</p>
+
+<ul>
+<li><strong>① 自動化したい業務</strong>：業務名・頻度・現状の所要時間・現状の課題を書く。「なぜ自動化したいのか」がここで見える。</li>
+<li><strong>② トリガー</strong>：「何が起きたら動き出すか」。例：毎朝9時になったら／メールを受信したら／フォームが送信されたら。トリガーを決めないとエージェントは"起動しっぱなし"になってしまう。</li>
+<li><strong>③ 処理の流れ</strong>：「どんな順番で何をするか」を箇条書きで並べる。モジュール5 S5で学んだフローチャート的な考え方がそのまま使える。</li>
+<li><strong>④ 入出力</strong>：各処理で「何を受け取り（入力）、何を出す（出力）か」を具体的に。「データ」「情報」のような曖昧な言葉ではなく、「RSSフィードのURL」「Slackメッセージ」のように具体的な項目名で書く。</li>
+<li><strong>⑤ 使用サービス・成功条件</strong>：使うツール（n8n／Slack／Gmail／Gemini等）と、「これが達成できたら成功」と言える条件。成功条件があると、後から「うまくいったか」を客観的に判断できる。</li>
+</ul>
+
+<hr>
+
+<h3>AIとの壁打ちのコツ</h3>
+<div class="tip-box">
+<p>「要件定義書を書いてください」とAIに丸投げすると、もっともらしい文章は返ってくるが<strong>自分の業務と合わない</strong>ことが多い。</p>
+<p>大事なのは<strong>「AIに質問を投げてもらって、自分が答える」</strong>順番です。AIに聞かれたことに答えていくだけで、<strong>自分でも気づいていなかった前提や抜け漏れが見えてくる</strong>。これが壁打ちの本当の価値です。</p>
+<p>コツは3つ：</p>
+<ul>
+<li><strong>最初のプロンプトで「1つずつ順番に質問して」と明示する</strong>。一度に5個も質問されると答えにくい。</li>
+<li><strong>「中学生にわかる言葉で」を入れる</strong>。AIは放っておくと専門用語を使いがち。平易な言葉で書かれた要件定義は、自分の頭でも整理しやすい。</li>
+<li><strong>「わからない」と答えてOK</strong>。決まっていないポイントが見えることが壁打ちのゴール。後で調べたり、周囲に確認したりする材料になる。</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>回答例（HRテック企業の人事スタッフの場合）</h3>
+
+<div class="example-box">① 自動化したい業務
+　業務名：毎朝の採用市場ニュース要約をSlackの #人事定例 チャンネルに投稿する
+　頻度：毎日1回、朝9時
+　現状の所要時間：1回30〜40分（記事を探す・読む・要約する）
+　現状の課題：情報ソースが複数に散らばっていて、毎朝集めるのに時間がかかる。
+　　　　　　　忙しい日はスキップしてしまい、チーム全体の情報感度が下がっている。
+
+② トリガー
+　毎朝9時になったら自動で実行される
+
+③ 処理の流れ
+　1. 指定したRSSフィード（HRテック系3サイト）から過去24時間の記事を取得する
+　2. 各記事のタイトルと概要をAIで3行要約する
+　3. 採用市場・HRテックに関連するものだけを残す（関係ないものは除外）
+　4. Slackの #人事定例 チャンネルに整形して投稿する
+
+④ 入出力
+　入力：RSSフィードのURL（3つ）、取得対象の時間範囲（過去24時間）
+　出力：Slackに投稿された要約メッセージ（記事タイトル／3行要約／元記事URL）
+
+⑤ 使用サービス・成功条件
+　使用サービス：n8n、RSS、Gemini API、Slack
+　成功条件：
+　　・毎朝9時までに #人事定例 チャンネルに要約が投稿されていること
+　　・関係ない記事が混ざっていないこと
+　　・手動でニュースを集める作業が週5日→0日になること</div>
+
+<hr>
+
+<h3>実務での活用イメージ</h3>
+<p>要件定義は、今回の課題だけでなく、AIエージェントを作る<strong>すべての場面で最初にやる作業</strong>です。</p>
+<ul>
+<li><strong>S3で本格的に使う</strong>：セクション3「要件定義とn8n実装入門」では、今回より詳しく要件を詰め、AIにn8n用のコードを書かせて実装します。S1で作った要件定義書は、S3以降で実装する業務を選ぶときの土台にもなります。</li>
+<li><strong>チームで合意するための道具</strong>：要件定義書があると、上司や同僚に「こういう業務を自動化したい」と伝えやすくなります。承認を取るための提案書にもなります。</li>
+<li><strong>後で振り返るときの記録</strong>：エージェントが動かなくなったとき、「何をするはずだったか」を思い出すために要件定義書が役立ちます。</li>
+</ul>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。要件定義の書き方や、業務の選び方について具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="REPLACE_AFTER_SETUP"
+  data-category="General"
+  data-category-id="REPLACE_AFTER_SETUP"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

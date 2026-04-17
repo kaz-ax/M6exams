@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M6実習課題 レビュー</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; }
+
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 200px;
+  min-width: 200px;
+  background: #f8f8f8;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.section-group {
+  margin-bottom: 4px;
+}
+
+.section-header {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #555;
+  user-select: none;
+}
+.section-header.s1 { color: #2563eb; }
+.section-header.s2 { color: #059669; }
+.section-header.s3 { color: #d97706; }
+.section-header.s4 { color: #db2777; }
+.section-header.s5 { color: #4f46e5; }
+.section-header.s6 { color: #7c3aed; }
+.section-header.s7 { color: #0891b2; }
+.section-header.summary { color: #6b7280; }
+
+.nav-item {
+  display: block;
+  padding: 6px 16px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.1s;
+  user-select: none;
+}
+.nav-item:hover { filter: brightness(0.93); }
+.nav-item.active {
+  font-weight: bold;
+  color: #333;
+  filter: brightness(0.88);
+}
+.nav-item.s1 { background: #dbeafe; }
+.nav-item.s2 { background: #d1fae5; }
+.nav-item.s3 { background: #fef3c7; }
+.nav-item.s4 { background: #fce7f3; }
+.nav-item.s5 { background: #e0e7ff; }
+.nav-item.s6 { background: #ede9fe; }
+.nav-item.s7 { background: #cffafe; }
+.nav-item.summary { background: #f3f4f6; }
+
+.content-frame {
+  flex: 1;
+  border: none;
+  height: 100%;
+}
+</style>
+</head>
+<body>
+<div id="auth-wall" style="display:none; max-width:400px; margin:100px auto; text-align:center; font-family:sans-serif;">
+<h2>M6実習課題 レビューサイト</h2>
+<form id="auth-form">
+<input id="auth-pass" type="password" placeholder="パスワードを入力" style="padding:10px;font-size:16px;width:200px;border:1px solid #ccc;border-radius:4px;">
+<button type="submit" style="padding:10px 20px;font-size:16px;margin-left:8px;background:#3498db;color:#fff;border:none;border-radius:4px;cursor:pointer;">確認</button>
+<p id="auth-error" style="color:red;margin-top:10px;"></p>
+</form>
+</div>
+<div id="main-content" style="display:none;">
+
+<div class="layout">
+<nav class="sidebar" id="sidebar"></nav>
+<iframe class="content-frame" id="content-frame"></iframe>
+</div>
+
+</div>
+<script src="auth.js"></script>
+<script>
+var sections = [
+  { id: 's1', label: 'S1 エージェント入門' },
+  { id: 's2', label: 'S2 n8n入門' },
+  { id: 's3', label: 'S3 要件定義と実装' },
+  { id: 's4', label: 'S4 API・Webhook' },
+  { id: 's5', label: 'S5 エージェント構築' },
+  { id: 's6', label: 'S6 デバッグ' },
+  { id: 's7', label: 'S7 ツール選定' },
+  { id: 'summary', label: 'まとめ' }
+];
+
+var types = [
+  { type: 'question', label: '課題' },
+  { type: 'explanation', label: '解説' },
+  { type: 'rubric', label: 'ルーブリック' }
+];
+
+var tabs = [];
+sections.forEach(function(s) {
+  types.forEach(function(t) {
+    var prefix = s.id === 'summary' ? 'M6_summary' : 'M6_' + s.id.toUpperCase();
+    tabs.push({
+      label: t.label,
+      file: prefix + '_' + t.type + '.html',
+      section: s.id,
+      sectionLabel: s.label
+    });
+  });
+});
+
+var sidebar = document.getElementById('sidebar');
+var frame = document.getElementById('content-frame');
+var navItems = [];
+
+tabs.forEach(function(t, i) {
+  var el = document.createElement('div');
+  el.className = 'nav-item ' + t.section;
+  var prefix = t.section === 'summary' ? 'まとめ' : t.section.toUpperCase();
+  el.textContent = prefix + ' ' + t.label;
+  el.addEventListener('click', function() { switchTab(i); });
+  sidebar.appendChild(el);
+  navItems.push(el);
+});
+
+function switchTab(i) {
+  navItems.forEach(function(el) { el.classList.remove('active'); });
+  navItems[i].classList.add('active');
+  frame.src = tabs[i].file + '?v=' + Date.now();
+}
+
+var observer = new MutationObserver(function() {
+  if (document.getElementById('main-content').style.display !== 'none') {
+    switchTab(0);
+    observer.disconnect();
+  }
+});
+observer.observe(document.getElementById('main-content'), { attributes: true, attributeFilter: ['style'] });
+if (document.getElementById('main-content').style.display !== 'none') {
+  switchTab(0);
+}
+</script>
+</body>
+</html>

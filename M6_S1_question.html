@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 S1実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>実習課題：自分の業務を1つ選んで、AIエージェント化の要件定義書を作ろう</h1>
+
+<h3>目的</h3>
+<p>モジュール5では、あらかじめ決まった業務（ミゾリーチの採用業務など）を題材にBotやワークフローを作りました。モジュール6からは<strong>「自分の業務」を自動化する</strong>AIエージェントを作っていきます。</p>
+<p>AIエージェントを正しく動かすために最も大事なのが<strong>「要件定義」</strong>です。要件定義とは、「何を・どんな順番で・どう動かすか」を、AIや周りの人に誤解なく伝わるレベルまで具体化することです。曖昧な指示ではAIも部下も動けません。</p>
+<p>この課題の目的は、AIと壁打ちしながら<strong>自分の業務の要件定義書を1枚作ること</strong>、そしてS2以降で実際にエージェントを組み立てるための<strong>n8nアカウントを準備すること</strong>の2つです。</p>
+
+<h3>課題</h3>
+<p>あなたが普段している業務の中から、<strong>「AIエージェントで自動化したい業務」を1つ</strong>選んでください。そして、AI（Gemini または ChatGPT）と対話しながら、その業務の要件定義書を作成してください。最後にn8nのアカウントを作成し、ダッシュボードにログインできる状態まで準備します。</p>
+
+<h3>成果物</h3>
+<ul>
+<li><strong>要件定義書</strong> ── 5項目（①自動化したい業務、②トリガー、③処理の流れ、④入出力、⑤使用サービス・成功条件）を埋めたもの</li>
+<li><strong>AIとの壁打ちログ（抜粋）</strong> ── AIからの質問と自分の回答が3往復以上わかるもの</li>
+<li><strong>n8nダッシュボードのスクリーンショット</strong> ── ログイン後のWorkflows画面</li>
+</ul>
+
+<hr>
+
+<h3>手順</h3>
+
+<h4>ステップ① 自動化したい業務を1つ選ぶ</h4>
+<p>以下の観点で、自分の業務を振り返ってください。「ぴったり当てはまるもの」ではなく、<strong>1つでも当てはまれば候補</strong>にしてOKです。</p>
+<ul>
+<li><strong>繰り返しやっている</strong>：週1回以上やっている定型作業</li>
+<li><strong>時間がかかっている</strong>：1回あたり30分以上かかる</li>
+<li><strong>ミスが起きやすい</strong>：うっかりミス・抜け漏れが発生しがち</li>
+<li><strong>誰でもできる</strong>：判断要素が少なく、ルールに沿って進められる</li>
+</ul>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>業務の選び方のヒント</strong><br>
+最初の課題なので、<strong>「小さくて・単純で・毎日ちょっと面倒」</strong>な業務を選ぶのがおすすめです。大きな業務を選ぶと要件定義だけで疲れてしまいます。<br><br>
+<strong>選びやすい業務の例：</strong>
+<ul style="margin: 5px 0;">
+<li>毎朝、業界ニュースをまとめてSlackに貼る</li>
+<li>問い合わせメールが届いたら内容を分類してスプレッドシートに転記する</li>
+<li>会議の議事録を要約してメンバーに共有する</li>
+<li>経費精算の領収書をスプレッドシートに入力する</li>
+<li>SNS投稿のネタをカレンダー登録する</li>
+</ul>
+</div>
+
+<h4>ステップ② AIと壁打ちして要件定義する</h4>
+<p>Gemini または ChatGPT を開き、<strong>AIに質問を投げてもらう形</strong>で要件を引き出してもらいます。自分から全部を先に書こうとせず、<strong>AIに聞かれたことに答えていく</strong>だけで要件が自然に固まっていきます。</p>
+
+<div style="background: #f5f5f5; border-left: 4px solid #666; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>最初に送るプロンプトの例</strong><br><br>
+私は（あなたの職種・役割）で、「（自動化したい業務）」という業務をAIエージェントで自動化したいと考えています。<br><br>
+これから一緒に、この業務の要件定義を作りたいです。要件を明確にするために必要な質問を、<strong>専門用語を使わず、中学生にもわかる言葉で</strong>、1つずつ順番にしてください。<br><br>
+最終的に、以下の5項目が埋まる形で要件定義書をまとめてもらいたいです。<br>
+① 自動化したい業務<br>
+② トリガー（何が起きたら動き出すか）<br>
+③ 処理の流れ（どんな順番で何をするか）<br>
+④ 入出力（何を受け取り、何を出すか）<br>
+⑤ 使用サービス・成功条件（どのツール・サービスを使い、何が達成できたらOKか）
+</div>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>壁打ちのコツ</strong>
+<ul style="margin: 5px 0;">
+<li>AIの質問に対して「わからない」「まだ決めていない」と答えてもOK。決まっていないポイントがあぶり出されるのが壁打ちの価値です</li>
+<li>AIが難しい言葉を使ってきたら「中学生にもわかる言葉で言い換えてください」と差し戻す</li>
+<li>3〜5往復を目安に。AIが「要件定義書としてまとめましょうか？」と聞いてきたら「お願いします」と答えて、最後に清書してもらう</li>
+</ul>
+</div>
+
+<h4>ステップ③ n8nアカウントを作成する</h4>
+<p>S2以降で使う<strong>n8n（エヌエイトエヌ）</strong>のアカウントを作成します。この講座では<strong>クラウド版の無料トライアル（2週間）</strong>を使います。</p>
+
+<ol>
+<li><a href="https://n8n.io/" target="_blank">https://n8n.io/</a> にアクセスし、右上の「Get started for free」をクリック</li>
+<li>メールアドレスを入力してアカウントを作成（Googleアカウント連携でもOK）</li>
+<li>ログイン後、ダッシュボード（Workflows画面）が表示されることを確認</li>
+<li>その画面のスクリーンショットを撮影して提出物に添付</li>
+</ol>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>注意</strong><br>
+クラウド版の無料期間は<strong>2週間</strong>です。追加料金を避けるため、できるだけ<strong>2週間以内にモジュール6を完走</strong>できるよう進めてください。2週間を超えて使う場合は、Starterプラン（月額24ユーロ／約4,500円）が必要になります。
+</div>
+
+<hr>
+
+<h3>提出物</h3>
+
+<p>以下のテンプレートに内容を入れて提出してください。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.8;">
+■ 要件定義書
+
+① 自動化したい業務：
+　業務名：（例：毎朝の業界ニュース要約をSlackに投稿する）
+　頻度：（例：毎日1回、朝9時）
+　現状の所要時間：（例：1回30分）
+　現状の課題：（例：情報ソースが散らばっていて集めるのに時間がかかる）
+
+② トリガー（何が起きたら動き出すか）：
+　（例：毎朝9時になったら自動実行）
+
+③ 処理の流れ（どんな順番で何をするか）：
+　1. （例：指定したRSSフィードから過去24時間の記事を取得）
+　2. （例：タイトルと概要をAIで3行要約）
+　3. （例：Slackの #news チャンネルに投稿）
+
+④ 入出力：
+　入力：（例：RSSフィードのURL、取得対象の時間範囲）
+　出力：（例：Slackに投稿された要約メッセージ）
+
+⑤ 使用サービス・成功条件：
+　使用サービス：（例：n8n、RSS、Gemini API、Slack）
+　成功条件：（例：毎朝9時までにSlackに要約が届いていること／手動作業が0になること）
+
+---
+
+■ AIとの壁打ちログ（抜粋）
+（AIからの質問と自分の回答が3往復以上わかるように貼り付け）
+
+---
+
+■ n8nダッシュボードのスクリーンショット
+（Workflows画面のスクショを添付）
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="REPLACE_AFTER_SETUP"
+  data-category="General"
+  data-category-id="REPLACE_AFTER_SETUP"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

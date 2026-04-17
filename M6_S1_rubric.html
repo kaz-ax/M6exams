@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーブリック：M6 S1実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+.check-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.check-table th, .check-table td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+.check-table th { background-color: #f0f0f0; }
+.supplement-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; }
+</style>
+</head>
+<body>
+
+<h1>ルーブリック（採点基準）</h1>
+
+<h3>採点基準</h3>
+<p>合計30点満点で評価します。評価対象は<strong>受講生が書いた要件定義書</strong>と<strong>壁打ちログ</strong>、そして<strong>n8n環境準備の完了有無</strong>です。AIが出力した文章そのものの品質は評価しません。</p>
+
+<table class="check-table">
+<tr>
+<th>観点</th>
+<th>OK（満点）</th>
+<th>惜しい（半分程度）</th>
+<th>NG（0点）</th>
+</tr>
+<tr>
+<td><strong>①業務選定の具体性</strong><br>（6点）</td>
+<td>業務名・頻度・現状の所要時間・現状の課題の4点がすべて具体的に書かれている。</td>
+<td>業務名は書かれているが、頻度・所要時間・現状の課題のいずれかが曖昧または未記入。</td>
+<td>業務名のみ、または未記入。</td>
+</tr>
+<tr>
+<td><strong>②要件定義の5要素</strong><br>（15点）</td>
+<td>①業務／②トリガー／③処理の流れ／④入出力／⑤使用サービス・成功条件 の5項目がすべて具体的に埋まっている。特に④入出力は「データ」「情報」のような曖昧な表現ではなく、具体的な項目名（例：RSSのURL、Slackメッセージ）で書かれている。</td>
+<td>5項目のうち1〜2つが曖昧または未記入。あるいは入出力が「データ」のように曖昧。</td>
+<td>3つ以上が未記入、または全体的に抽象的で実装イメージが湧かない。</td>
+</tr>
+<tr>
+<td><strong>③AIとの壁打ちログ</strong><br>（5点）</td>
+<td>AIからの質問と自分の回答が3往復以上残っており、壁打ちを通じて要件が磨かれた痕跡がある。</td>
+<td>1〜2往復のみ、または結果だけ貼り付けてあり、壁打ちの過程が見えない。</td>
+<td>未提出、またはAIへの最初の依頼文だけ。</td>
+</tr>
+<tr>
+<td><strong>④n8n環境準備</strong><br>（4点）</td>
+<td>n8nダッシュボード（Workflows画面）のスクリーンショットが提出されている。</td>
+<td>ログイン画面・登録完了メールのスクショのみで、ダッシュボードまで到達していない。</td>
+<td>未提出。</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>採点の注意事項</h3>
+<div class="supplement-box">
+<p><strong>業務内容の良し悪しは評価しません。</strong>「小さすぎる」「地味すぎる」と感じても、要件定義の5要素が具体的に埋まっていれば満点です。最初の課題なので、むしろ小さく始めている方が望ましいです。</p>
+<p><strong>実装可能性は評価しません。</strong>S1の段階では「本当にn8nで組めるか」は不問です。実装の難易度はS2以降で扱います。</p>
+</div>
+
+<hr>
+
+<h3>フィードバックのポイント</h3>
+<div class="supplement-box">
+<p><strong>高評価のケース：</strong><br>
+業務が具体的（例：「毎朝の競合ニュース収集」ではなく「平日朝9時に、競合3社のプレスリリースRSSを取得してSlackの #営業定例 に投稿」）で、要件定義の5要素がすべて埋まっており、壁打ちログでは「わからない」と答えた部分もあり、やりとりを通じて解像度が上がっている痕跡がある場合、満点に近い評価です。</p>
+
+<p><strong>改善が必要なケース：</strong><br>
+業務名だけで頻度や課題感が書かれていない場合は「現状どのくらいの時間がかかっているか、なぜ自動化したいのかを追記してください」とフィードバックしてください。入出力が「データを渡す」のように曖昧な場合は「具体的に何を渡すのか（URL、メッセージ本文、日時など）を書いてください」と促します。</p>
+
+<p><strong>再提出を求めるケース：</strong><br>
+要件定義書の大半（3項目以上）が未記入の場合、またはn8nダッシュボードのスクショが提出されていない場合は再提出を依頼してください。n8nアカウントはS2以降の前提となるため、ここで必ず準備を完了させます。</p>
+</div>
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="REPLACE_AFTER_SETUP"
+  data-category="General"
+  data-category-id="REPLACE_AFTER_SETUP"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

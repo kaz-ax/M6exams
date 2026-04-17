@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 S6実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>実習課題：意図的にエラーを起こしてデバッグする ─ 2つのエラー事例を診断・修正しよう</h1>
+
+<h3>目的</h3>
+<p>セクション5までは「動くものを作る」ことが中心でした。セクション6は<strong>「動かなくなったものを直す」</strong>スキルを身につけます。</p>
+<p>業務で自動化を運用し始めると、エラーで止まることは<strong>絶対に避けられません</strong>。APIの仕様変更、認証キーの期限切れ、データ形式の変化、使っているサービスの一時的な不調 ── 理由は様々です。そのときに<strong>冷静に原因を特定して直せる力</strong>があるかどうかで、運用できるエージェントの数が変わってきます。</p>
+<p>この課題の目的は、<strong>2種類のエラーを意図的に発生させて、ログ解析 → AIレスキュー → 修正 → 再実行Success</strong> のデバッグの一連の流れを自分の手で1回転することです。</p>
+
+<h3>課題</h3>
+<p>セクション3〜5で作成した自分のワークフローを<strong>1つ選び</strong>、そのワークフローに対して<strong>以下の2種類のエラーを意図的に発生させて、それぞれ診断・修正してください</strong>。</p>
+<ul>
+<li><strong>エラーA（認証系）</strong>：ノードが参照しているCredentialsを無効な状態にして、実行時に認証エラー（401や403など）を発生させる</li>
+<li><strong>エラーB（参照系）</strong>：ノードのパラメータやプロンプトで、<strong>存在しないフィールド名</strong>を参照するように書き換えて、実行時に参照エラーまたは`undefined`を発生させる</li>
+</ul>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>S5までで実際に遭遇したエラーがあれば、それを使ってもOK</strong><br>
+セクション3〜5の課題中に実際にぶつかったエラーがあれば、それを事例AまたはBに<strong>そのまま充てて</strong>ください（ログ・修正履歴が残っていれば再現不要）。意図的に壊したエラーと実体験エラーを混ぜてもOK。合計2エラーが診断・修正されていれば条件を満たします。
+</div>
+
+<h3>成果物</h3>
+<p>エラーAとエラーBそれぞれについて、以下6点を提出します。</p>
+<ul>
+<li><strong>エラー発生時のExecutions画面スクリーンショット</strong> ── 赤で止まっているノードが見える画面</li>
+<li><strong>エラー詳細ログ</strong> ── エラーメッセージの全文テキスト</li>
+<li><strong>ログ解析メモ</strong> ── どのノードで／どんなデータで／なぜ止まったかの自分なりの解釈（2〜3行）</li>
+<li><strong>AIレスキューのチャットログ</strong> ── エラーメッセージをAIに貼り付けて相談したやり取り（1〜3往復）</li>
+<li><strong>修正内容のBefore/After</strong> ── どこを何に変えたか</li>
+<li><strong>修正後のExecutions「Success」画面</strong> ── 再実行で通ったことがわかる画面</li>
+</ul>
+
+<hr>
+
+<h3>手順</h3>
+
+<h4>ステップ① デバッグ対象のワークフローを選ぶ</h4>
+<p>セクション3〜5で作成したワークフローから1つ選びます。S5の完成版（Schedule＋RSS＋AI＋配信）がベストですが、S3のインポート版やS4のAPI連携版でも構いません。</p>
+<p>また、選んだワークフローは<strong>デバッグ演習で壊すので、複製（Duplicate）</strong>してから使うのがおすすめです。</p>
+
+<h4>ステップ② エラーA（認証系）を発生させる</h4>
+<p>ワークフローに含まれる<strong>CredentialsのどれかA</strong>（AI／Slack／Gmail／スプシ／任意のHTTP Request の認証）を選び、以下のいずれかで故意に無効化します。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>認証系エラーの起こし方（どれか1つでOK）</strong>
+<ul style="margin: 5px 0;">
+<li>Credentialsに保存されているAPIキーを<strong>1文字書き換える</strong>（保存後に"Test"でエラー確認）</li>
+<li>ノードのCredentials選択を<strong>別の無効なCredentials</strong>に切り替える</li>
+<li>HTTP Requestノードで、Headerに仮の無効トークンを直接記入する（この課題中だけの例外、後でCredentials参照に戻す）</li>
+</ul>
+</div>
+
+<p>ワークフローを実行し、ノードが赤くなること／Executionsでエラーとして記録されることを確認して、画面キャプチャを残します。</p>
+
+<h4>ステップ③ エラーB（参照系）を発生させる</h4>
+<p>AIノードのプロンプトや、Setノード、配信ノードの本文テンプレートなどで、<strong>存在しないフィールド名を参照</strong>するように書き換えます。</p>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>参照系エラーの起こし方の例</strong>
+<ul style="margin: 5px 0;">
+<li>AIプロンプト内で <code>{{ $json.title }}</code> となっている箇所を <code>{{ $json.titleXYZ }}</code> のように別名に変える</li>
+<li>Setノードのフィールドで、参照元に存在しない <code>{{ $json.foobar.nonexistent }}</code> を書く</li>
+<li>配信ノードのメッセージ本文で、前ノードにないフィールド名を指定する</li>
+</ul>
+</div>
+
+<p>実行して、ノードが赤くなる／出力が`undefined`になる／期待した結果が出ないことを確認し、画面キャプチャを残します。</p>
+
+<h4>ステップ④ 各エラーを診断する（ログ解析）</h4>
+<p>Executionsから該当する実行をクリックし、<strong>赤くなったノードのエラーメッセージ</strong>を確認します。以下3点をメモします。</p>
+<ol>
+<li><strong>どのノード</strong>で止まったか（ノード名）</li>
+<li><strong>どんなデータ</strong>が原因か（入力タブ・出力タブを見る）</li>
+<li><strong>エラーメッセージの内容</strong>（コピペしておく）</li>
+</ol>
+
+<h4>ステップ⑤ AIレスキューで原因を聞く</h4>
+<p>エラーメッセージをChatGPTまたはGeminiに貼り付けて相談します。</p>
+
+<div style="background: #f5f5f5; border-left: 4px solid #666; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>AIに渡すプロンプト例</strong><br><br>
+n8nでワークフローを実行したら以下のエラーが出ました。原因と、n8n上での修正方法を専門用語を使わず中学生にもわかる言葉で教えてください。<br><br>
+【使っているノード】（例：OpenAI Chat Model、Slack Send Message など）<br>
+【エラーメッセージ】<br>
+（ここにエラー全文を貼り付け）<br>
+【試したこと】（あれば）<br><br>
+修正のために確認すべき設定項目と、具体的な直し方を順番に示してください。
+</div>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>AIで解決しない場合：コミュニティ活用</strong><br>
+AIの回答で直らない場合は、動画4で紹介した<a href="https://community.n8n.io/" target="_blank">n8n公式フォーラム</a>や<a href="https://docs.n8n.io/" target="_blank">公式ドキュメント</a>で同じエラーメッセージを検索してください。実際のユーザーが直した手順が見つかることが多いです。
+</div>
+
+<h4>ステップ⑥ 修正して再実行 → Success</h4>
+<ol>
+<li>AIまたはコミュニティのアドバイスをもとに、該当ノードの設定を直す</li>
+<li>ワークフローを再実行</li>
+<li>Executionsで「Success」になることを確認</li>
+<li>スクリーンショットを撮って控える</li>
+</ol>
+
+<hr>
+
+<h3>提出物</h3>
+
+<p>以下のテンプレートに内容を入れて提出してください。エラーAとエラーB、それぞれ同じ項目を埋めます。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.8;">
+■ デバッグ対象のワークフロー名：（ここに記入）
+■ 対象ワークフローの出典：（例：S5で作成した「朝ニュース配信エージェント」）
+
+===================================================
+【エラーA（認証系）】
+===================================================
+
+■ エラーの起こし方：
+（例：OpenAI Credentialsに保存していたAPIキーを1文字書き換えた）
+
+■ エラー発生時のExecutions画面スクリーンショット：
+（赤で止まったノードが見える画面）
+
+■ エラーメッセージ全文：
+（コピペで貼り付け）
+
+■ ログ解析メモ（2〜3行）：
+　どのノードで：（例：OpenAI Chat Model ノード）
+　どんなデータで：（例：入力はある、認証処理で止まっている）
+　なぜ止まったか：（例：APIキーが無効と思われる、401エラーが出ている）
+
+■ AIレスキューのチャットログ：
+（エラーメッセージをAIに貼って相談したやり取りを1〜3往復分）
+
+■ 修正内容のBefore/After：
+　Before：（例：Credentials「OpenAI_Key」のkey欄が`sk-...XYZ`）
+　After ：（例：正しいキー`sk-...ABC`に戻した）
+
+■ 修正後のExecutions「Success」画面：
+（再実行で成功したことがわかるスクショ）
+
+===================================================
+【エラーB（参照系）】
+===================================================
+
+■ エラーの起こし方：
+（例：Slackメッセージ本文で{{ $json.summary }}を{{ $json.summaryXYZ }}に書き換えた）
+
+■ エラー発生時のExecutions画面スクリーンショット：
+（赤で止まったノード、または出力が`undefined`になっている画面）
+
+■ エラーメッセージ全文：
+（コピペで貼り付け）
+
+■ ログ解析メモ（2〜3行）：
+　どのノードで：
+　どんなデータで：
+　なぜ止まったか：
+
+■ AIレスキューのチャットログ：
+（エラーメッセージをAIに貼って相談したやり取りを1〜3往復分）
+
+■ 修正内容のBefore/After：
+　Before：
+　After ：
+
+■ 修正後のExecutions「Success」画面：
+
+===================================================
+
+■ 振り返り（3〜5行）：
+（例：認証系エラーはメッセージが明確で対処しやすかった。参照系の
+undefinedは見た目が壊れないので気づきにくく、通しテストの大事さを
+再認識。AIレスキューは「専門用語を避けて」と付けるだけで回答が
+一気に分かりやすくなった。今後はエラー発生時にまずログをコピーして
+AIに貼る習慣にしたい。）
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

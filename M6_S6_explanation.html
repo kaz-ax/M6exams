@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S6実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.warn-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「エラーに出会ったときの動き方」</strong>を型として身につけることです。</p>
+<p>動く自動化を作るスキルと、動かなくなったときに直せるスキルは別物です。業務で運用を始めると<strong>エラーは必ず起きます</strong>。そのときに冷静にログを読み、AIに相談し、直せるかどうかで、任せられるエージェントの数が変わってきます。「動かしたまま放置して、いつの間にか3週間止まっていた」は避けたい事態です。</p>
+</div>
+
+<hr>
+
+<h3>よくある停止原因4パターン</h3>
+<p>n8nのワークフローが止まる原因は、おおまかに以下の4種類に分類できます。</p>
+
+<ul>
+<li><strong>① 認証系</strong>：APIキーの期限切れ・書き換え・権限不足（401 / 403）</li>
+<li><strong>② 参照系</strong>：前ノードが返すデータと、次ノードが期待するフィールド名がずれる／`undefined`</li>
+<li><strong>③ レート／制限系</strong>：APIの呼び出し回数上限（429）／無料枠の超過</li>
+<li><strong>④ 外部サービス都合</strong>：相手側の一時障害（500系）／仕様変更で返り値が変わった</li>
+</ul>
+
+<p>この課題では<strong>①と②</strong>を自分で起こして直す演習をします。③と④は実運用で出会ってから対処できるよう、今回はパターンとして頭に入れておきましょう。</p>
+
+<hr>
+
+<h3>ログ解析の3つの質問</h3>
+<div class="tip-box">
+<p>Executionsのエラー画面を見るとき、以下3つを順番に自問すると原因に辿り着けます。</p>
+<ol>
+<li><strong>どのノードで止まったか？</strong>（赤くなっているノードを特定する）</li>
+<li><strong>そのノードに入ってきたデータは何か？</strong>（入力タブで前ノードの出力を確認）</li>
+<li><strong>そのノードが期待するデータと、実際のデータはどこがずれているか？</strong>（パラメータ設定と照らす）</li>
+</ol>
+<p>この3問に答えられたら、原因はだいたい特定できています。あとは直すだけ。</p>
+</div>
+
+<hr>
+
+<h3>AIレスキューの使い方</h3>
+<div class="purpose-box">
+<p>エラーメッセージをそのままAIに貼り付けるだけでも助けになりますが、以下を添えると<strong>回答の精度が一気に上がります</strong>。</p>
+<ul>
+<li><strong>使っているノードの名前</strong>（例：OpenAI Chat Model、Slack Send Message）</li>
+<li><strong>エラー全文</strong>（省略しない。Stack Traceがあればそれも）</li>
+<li><strong>試したこと</strong>（Credentialsを確認した／別のノードに変えた等）</li>
+<li><strong>「専門用語を避けて中学生にもわかる言葉で」</strong>の指示</li>
+<li><strong>「修正のために確認すべき設定項目と順番を示して」</strong>の依頼</li>
+</ul>
+<p>AIが的外れな回答を返してきた場合は「実際のワークフローはこうなっている」と現状を説明して差し戻す。これを2〜3往復すると、だいたい正解に辿り着きます。</p>
+</div>
+
+<hr>
+
+<h3>回答例：エラーA（認証系）の診断と修正</h3>
+
+<h4>エラーの起こし方</h4>
+<div class="example-box">OpenAI Credentials「OpenAI_MyKey」のAPI Key欄を、末尾3文字だけ書き換えて保存。</div>
+
+<h4>エラーメッセージ（Executionsで見たもの）</h4>
+<div class="example-box">ERROR: The resource you are requesting could not be found or the credentials provided are invalid.
+Full error:
+401 Unauthorized
+{
+  "error": {
+    "message": "Incorrect API key provided: sk-...xyz",
+    "type": "invalid_request_error",
+    "code": "invalid_api_key"
+  }
+}</div>
+
+<h4>ログ解析メモ</h4>
+<div class="example-box">どのノードで：OpenAI Chat Model ノード
+どんなデータで：入力（RSSから取得した記事タイトル5件）はある。認証処理の段階で止まっている。
+なぜ止まったか：401 Unauthorized かつ "invalid_api_key" とあるため、APIキーが無効。</div>
+
+<h4>AIレスキューのチャットログ（抜粋）</h4>
+<div class="example-box">自分：
+n8nで以下エラーが出ました。OpenAI Chat Modelノードです。
+「401 Unauthorized / invalid_api_key」。原因と修正方法を中学生にもわかる言葉で教えてください。
+
+AI：
+これは「APIキー（OpenAIのパスワードのようなもの）が間違っている」ことを示しています。
+確認手順：
+1. OpenAIのサイトにログインし、API Keys画面で現在有効なキーを確認する
+2. n8nの Credentials > OpenAI_MyKey を開き、キー欄を貼り直す
+3. 「Test」ボタンで緑になるか確認
+4. ワークフローを再実行
+
+キーが漏洩した疑いがある場合は、OpenAIサイトで旧キーをRevokeしてから
+新しいキーを発行してください。</div>
+
+<h4>修正内容のBefore/After</h4>
+<div class="example-box">Before：Credentials「OpenAI_MyKey」のAPI Key末尾が`...xyz`（書き換えた誤値）
+After ：OpenAIサイトで現行キーを確認し、正しい末尾`...abc`で上書き保存
+
+※Test で緑確認、再実行でSuccess。</div>
+
+<hr>
+
+<h3>回答例：エラーB（参照系）の診断と修正</h3>
+
+<h4>エラーの起こし方</h4>
+<div class="example-box">Slack Send Messageノードの本文テンプレートを
+「📰 {{ $json.title }}」から「📰 {{ $json.titleXYZ }}」に書き換え。</div>
+
+<h4>エラーの見え方</h4>
+<div class="example-box">※このパターンはノードが赤くならないことも多い。
+Slackに届いたメッセージが「📰 undefined」になってしまう。
+Executionsは成功扱いだが、出力の中身が壊れる。
+
+または厳密モードの場合：
+ERROR: Cannot read property 'titleXYZ' of undefined</div>
+
+<h4>ログ解析メモ</h4>
+<div class="example-box">どのノードで：Slack Send Message ノード
+どんなデータで：前ノード（AI要約）の出力に`title`はあるが`titleXYZ`は無い
+なぜ止まったか：存在しないフィールド名を参照しており、undefinedがそのまま文字列化されている</div>
+
+<h4>AIレスキューのチャットログ（抜粋）</h4>
+<div class="example-box">自分：
+n8nのSlackノードで投稿文が「undefined」と表示されます。
+メッセージ本文には {{ $json.titleXYZ }} を指定しています。
+
+AI：
+undefinedが出るのは「参照先に該当フィールドがない」ことを示します。
+前ノードの出力を確認してください：
+1. Slackノードの「Input」タブを開く
+2. 実際に存在するフィールド名を確認（例：title, summary など）
+3. メッセージ本文の参照を正しいフィールド名に直す
+
+多くの場合、AIノードの出力は`json.message.content`や`json.choices[0]`の
+配下にあります。Inputタブで確認するのが確実です。</div>
+
+<h4>修正内容のBefore/After</h4>
+<div class="example-box">Before：「📰 {{ $json.titleXYZ }}」（存在しない参照）
+After ：「📰 {{ $json.title }}」（Inputタブで確認した実フィールド名）</div>
+
+<hr>
+
+<h3>デバッグが早くなる4つの習慣</h3>
+<ul>
+<li><strong>エラーが出たら最初に"Input"タブを開く</strong>：前ノードが何を渡してきたかを確認するのが原因特定の最短路</li>
+<li><strong>エラーメッセージは省略せずAIに貼る</strong>：先頭だけ貼ると見落としが起きる。Stack Traceまで全部貼る</li>
+<li><strong>直す前に「再現できる状態」を保つ</strong>：あれこれ触る前にスクショを残す。直してからBefore/Afterで振り返れる</li>
+<li><strong>直したらSaveして再実行</strong>：直したつもりでも保存を忘れているケースが頻出。保存→再実行→Executions確認をワンセットで</li>
+</ul>
+
+<hr>
+
+<h3>コミュニティの使い分け</h3>
+<ul>
+<li><strong>AI（ChatGPT / Gemini）</strong>：一般的なエラーや、よく出るパターンの解説には最速で役立つ</li>
+<li><strong>n8n公式フォーラム（community.n8n.io）</strong>：AIでは解決しない特殊ケース、n8n固有のバグ、新しいノードの使い方などに強い</li>
+<li><strong>n8n公式ドキュメント（docs.n8n.io）</strong>：ノードごとの仕様・パラメータの意味を正確に知りたいとき</li>
+<li><strong>GitHub Issues（n8n-io/n8n）</strong>：既知のバグや修正予定を調べるとき</li>
+</ul>
+
+<hr>
+
+<h3>実務での活用イメージ</h3>
+<ul>
+<li><strong>運用監視のためのエラー通知フロー</strong>：ワークフローが失敗したら自分にSlack DMが飛ぶ仕組みを別ワークフローで組む（Error Workflow設定）</li>
+<li><strong>エラー事例集の蓄積</strong>：社内で出たエラー・解決方法をNotionやWikiに溜めていくと、同じエラーに2度目会ったとき即解決できる</li>
+<li><strong>"仕様変更検知"のデバッグ</strong>：API側の仕様変更でいつの間にか動かなくなるケースに備え、出力の形式が変わっていないか月1でチェックする仕組みを作る</li>
+<li><strong>ペアデバッグ</strong>：詰まったらすぐ誰かにログを見せる／AIに聞く。1人で30分以上悩まない習慣づけ</li>
+</ul>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。エラー解析の進め方や、よくあるつまずきのパターンについて具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

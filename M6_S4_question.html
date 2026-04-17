@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 S4実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>実習課題：外部APIとAIを組み合わせた情報収集＋要約フローを作ろう</h1>
+
+<h3>目的</h3>
+<p>セクション3では、外部サービスに接続する部分をSetノードで<strong>擬似化</strong>して動かしました。セクション4では、いよいよ<strong>本物の外部API</strong>と通信するフローを作ります。</p>
+<p>この課題の目的は3つあります。</p>
+<ol>
+<li><strong>HTTP Requestノード</strong>で本物のAPIを叩き、実データを取得すること</li>
+<li><strong>n8nのCredentials機能</strong>でAPIキーを安全に管理すること（ハードコード禁止）</li>
+<li>取得したデータを<strong>AI（Gemini／OpenAI）で処理</strong>し、人が読める結果に変換すること</li>
+</ol>
+<p>小さくても、「外部の世界からデータを取ってきて・AIで加工して・出力する」という<strong>AIエージェントの基本構造</strong>を1周体験するのがゴールです。</p>
+
+<h3>課題</h3>
+<p>以下の要素をすべて含むn8nワークフローを作成し、実行成功まで持っていってください。</p>
+<ul>
+<li>起動トリガー：<strong>Manual Trigger</strong>（<strong>Schedule Trigger</strong>も可）</li>
+<li>外部API呼び出し：<strong>HTTP Requestノード</strong>で実APIを1回以上叩く</li>
+<li>AI処理：<strong>Gemini または OpenAI ノード</strong>でデータを要約／整形／判定など</li>
+<li>認証管理：APIキーは<strong>n8nのCredentials機能に保存</strong>し、HTTP Requestノードから参照する（URL・Headerに直書きNG）</li>
+<li>実行成功：Executionsに「Success」として記録されていること</li>
+</ul>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>代替オプション：Webhook受信型でもOK</strong><br>
+「外から情報を取りに行く」のではなく、<strong>「外から情報を受け取る」</strong>パターン（Webhook）で作ってもOKです。その場合、Webhookノードで受けて → AIで処理 → 結果を返す／保存する、という構成になります。Webhookのテストは n8n の「Test URL」に<code>curl</code>やSlackのOutgoing Webhookから送信して動作確認します。
+</div>
+
+<h3>成果物</h3>
+<ul>
+<li><strong>使用したAPIの説明</strong> ── 何のAPIを使い、何が取れるのか（3〜5行）</li>
+<li><strong>ワークフロー全体のキャンバス画像</strong></li>
+<li><strong>Credentials一覧画面のスクリーンショット</strong> ── 「保存したクレデンシャル名」が見える画面（※キーの値は見えなくてOK／むしろ見せない）</li>
+<li><strong>Executions「Success」画面</strong></li>
+<li><strong>出力結果の例</strong> ── AIが最終的に出した文章やデータ（1つ分）</li>
+<li><strong>振り返り</strong> ── 3〜5行（S3の擬似フローと比べて何が違ったか／どこで詰まったか）</li>
+</ul>
+
+<hr>
+
+<h3>手順</h3>
+
+<h4>ステップ① 使うAPIを決める</h4>
+<p>以下から1つ選ぶのがおすすめです。無料かつ登録がシンプルなものを選んでいます。業務に関連するAPIが他にあればそれでもOK。</p>
+
+<div style="background: #f5f5f5; border-left: 4px solid #666; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>推奨API（APIキーあり）</strong>
+<ul style="margin: 5px 0;">
+<li><strong>OpenWeatherMap</strong>（<a href="https://openweathermap.org/api" target="_blank">https://openweathermap.org/api</a>）：天気予報。動画4と同じ題材。無料登録でキー取得</li>
+<li><strong>NewsAPI</strong>（<a href="https://newsapi.org/" target="_blank">https://newsapi.org/</a>）：ニュースヘッドライン取得。無料プランあり</li>
+<li><strong>Qiita API</strong>（<a href="https://qiita.com/api/v2/docs" target="_blank">https://qiita.com/api/v2/docs</a>）：日本語の技術記事検索。トークン取得が簡単</li>
+</ul>
+<strong>キーなしで動くAPI（簡単優先）</strong>
+<ul style="margin: 5px 0;">
+<li><strong>Open-Meteo</strong>（<a href="https://open-meteo.com/" target="_blank">https://open-meteo.com/</a>）：天気予報。登録不要（認証管理はAI側で実施）</li>
+<li><strong>公開RSSフィード</strong>：各種ニュースサイトのRSS（認証管理はAI側で実施）</li>
+</ul>
+</div>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>重要：キーなしAPIを選ぶ場合</strong><br>
+「認証管理」の採点要素を満たすため、<strong>AIノード（Gemini / OpenAI）のAPIキーは必ずCredentialsで管理</strong>してください。直接プロンプトやURLに書き込むのは絶対NGです。
+</div>
+
+<h4>ステップ② APIキーを取得する（該当する場合のみ）</h4>
+<p>上記の推奨APIを使う場合、公式サイトでアカウント登録してAPIキーを発行します。キーは画面に1度だけ表示されることが多いので、<strong>安全な場所（パスワードマネージャーなど）にコピーして保管</strong>してください。</p>
+
+<h4>ステップ③ n8nのCredentialsにキーを登録する</h4>
+<ol>
+<li>n8n左サイドバーの<strong>「Credentials」</strong>を開く</li>
+<li>「Add Credential」をクリック</li>
+<li>使うAPIに対応するクレデンシャルタイプを検索（例：OpenAI API、Gemini API、HTTP Header Auth、HTTP Query Auth など）</li>
+<li>APIキーを入力し、分かりやすい名前を付けて保存</li>
+</ol>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>セキュリティ注意</strong>
+<ul style="margin: 5px 0;">
+<li>APIキーを<strong>HTTP RequestノードのURL・Header・Body に直書きしない</strong></li>
+<li>提出するスクリーンショットは、<strong>Credentials名は見せてOK／キーの値は映さない</strong></li>
+<li>キーを誤って公開リポジトリやSlack公開チャンネルに貼らない（漏洩時は即Revokeして再発行）</li>
+<li>従量課金系APIの場合は<strong>利用上限を設定</strong>（OpenAIなら Settings → Billing → Usage limits）</li>
+</ul>
+</div>
+
+<h4>ステップ④ ワークフローを組む</h4>
+<p>基本構成の例（HTTP Request型）：</p>
+<ol>
+<li><strong>Manual Trigger</strong>（または Schedule Trigger）</li>
+<li><strong>HTTP Request</strong>：ステップ①で選んだAPIを叩く。認証は<strong>Credentialsから参照</strong>する設定にする</li>
+<li><strong>AI（Gemini / OpenAI）</strong>：取得したデータを要約／整形／判定させる（プロンプトは日本語でOK）</li>
+<li><strong>Set（Edit Fields）</strong>または出力ノード：最終メッセージを整形（Slackやメール送信は任意）</li>
+</ol>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>ヒント：AIに骨組みを書かせて良い</strong><br>
+セクション3で学んだ通り、「このAPIから取得してAIで要約するn8nフローのJSONを書いて」とChatGPT/Geminiに依頼すると骨組みが手に入ります。インポートしてから、Credentialsを繋ぐ作業だけ手で行うと早いです。
+</div>
+
+<h4>ステップ⑤ 実行して「Success」にする</h4>
+<ol>
+<li>「Test workflow」または Manual Trigger の「Execute step」で実行</li>
+<li>HTTP Requestノードをクリックして「Output」タブで<strong>実際に取得したAPIデータ</strong>が見えることを確認</li>
+<li>AIノードのOutputで<strong>要約結果</strong>が出ていることを確認</li>
+<li>Executions画面で Success になっていることを確認</li>
+</ol>
+
+<hr>
+
+<h3>提出物</h3>
+
+<p>以下のテンプレートに内容を入れて提出してください。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.8;">
+■ ワークフロー名：（ここに記入）
+
+■ 使用したAPI：
+　API名：（例：OpenWeatherMap）
+　何が取れるのか：（例：指定した都市の現在の天気と気温）
+　認証方式：（例：APIキー（Credentials「OpenWeather_MyKey」として保存））
+
+---
+
+■ ワークフロー全体のキャンバス画像：
+（すべてのノードが線でつながって見える状態）
+
+■ Credentials一覧画面のスクリーンショット：
+（n8nの Credentials 画面 ─ 保存したクレデンシャル名が見える画面
+　※APIキーの値は絶対に映さない）
+
+■ Executions「Success」画面：
+（実行が成功したことがわかるスクリーンショット）
+
+---
+
+■ 出力結果の例：
+（AIが最終的に出した文章やデータを1つ貼り付け）
+
+---
+
+■ 振り返り（3〜5行）：
+（例：S3では擬似データだったので「動いたフリ」だったが、今回は
+本当に外の天気情報が取れてAIが日本語の朝礼文にまとめてくれたのが
+感動的だった。Credentials機能でキーを別管理できるのが想像以上に便利。）
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

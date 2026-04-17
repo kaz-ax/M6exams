@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S4実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.warn-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「AIエージェントに"手足"を与える」</strong>体験をすることです。</p>
+<p>セクション3までのワークフローは、n8nの内蔵ノードだけで完結していました。つまり、AIエージェントは「自分の頭の中で考える」ことしかできない状態でした。セクション4では、<strong>外部のデータを取ってくる／外部に働きかける</strong>手段を学びます。これでエージェントは初めて「現実の世界で役に立つ」存在になります。</p>
+</div>
+
+<hr>
+
+<h3>APIとは（ざっくり）</h3>
+<p><strong>API（エーピーアイ）</strong>は、異なるアプリ同士がデータをやり取りするための「専用窓口」です。動画1で紹介した<strong>レストランの例え</strong>がわかりやすい：</p>
+
+<div class="example-box">お客さん（n8nワークフロー）
+  ↓ メニューを見て「ハンバーグください」と注文
+注文係（API）
+  ↓ 厨房に伝票を通す
+シェフ／厨房（サーバー）
+  ↓ 料理を作る
+注文係（API）
+  ↓ 料理を客席に運ぶ
+お客さん（n8nワークフロー）が結果を受け取る</div>
+
+<p>n8nの<strong>HTTP Requestノード</strong>は、この「注文係に伝票を渡す」役割です。指定したURLに指定した形式で問い合わせると、外部サービスからデータが返ってきます。</p>
+
+<hr>
+
+<h3>Webhookとは（APIとの違い）</h3>
+<p>APIが<strong>「こちらから取りに行く」</strong>のに対し、Webhookは<strong>「向こうから押し込まれる」</strong>仕組みです。</p>
+
+<ul>
+<li><strong>API（取りに行く）</strong>：n8nから「天気を教えて」と問い合わせる</li>
+<li><strong>Webhook（受け取る）</strong>：Slackでメッセージが投稿されたとき、n8nに自動で通知が飛んでくる</li>
+</ul>
+
+<p>両者は相互に補完する関係です。「毎朝定時にAPIを叩いてニュースを取得する」「Slackにメンションがあったら即座に反応する」など、使い分けることで<strong>イベント駆動</strong>のエージェントが組めるようになります。</p>
+
+<hr>
+
+<h3>Credentials（認証キー）の安全管理</h3>
+<div class="warn-box">
+<p>APIキーは<strong>「家の鍵」「銀行のカード」</strong>と同じです。漏れると他人に自分のアカウントで勝手に使われます。従量課金系のAPIだと、<strong>高額請求が来る</strong>リスクもあります（過去に実例あり）。</p>
+
+<p><strong>やってはいけないこと：</strong></p>
+<ul>
+<li>ノードのURL・Header・Body にキーを直書きする（ワークフローをエクスポートすると平文で流出）</li>
+<li>キーをSlackやGitHubに貼り付ける</li>
+<li>スクリーンショットにキーが映ったまま共有する</li>
+</ul>
+
+<p><strong>n8nの安全な使い方：</strong></p>
+<ul>
+<li>必ず<strong>Credentials機能</strong>にキーを保存し、ノードからは「Credentialsを選択」して参照する</li>
+<li>従量課金系APIは<strong>利用上限</strong>を先に設定する（OpenAIなら月額上限。動画3の画面収録を参考に）</li>
+<li>キーを誤って公開してしまったら、<strong>即座に発行元サイトでRevoke（無効化）</strong>して再発行する</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>回答例：OpenWeatherMap + Gemini で朝礼ブリーフィング</h3>
+
+<h4>フロー構成（動画4と同じ題材）</h4>
+<div class="example-box">1. Manual Trigger（手動起動）
+2. HTTP Request：OpenWeatherMap API に「Tokyo の現在の天気」を問い合わせる
+   - URL: https://api.openweathermap.org/data/2.5/weather
+   - Query: q=Tokyo, units=metric, lang=ja
+   - 認証: Credentials「OpenWeather_Key」を参照（キーは appid として自動付与）
+3. Gemini：取得したJSONを元に「朝礼用のブリーフィング」を生成
+   - プロンプト例：
+     「以下の天気データを元に、朝礼で読み上げる簡潔な
+      一言ブリーフィング（3〜4文、敬体、服装の助言つき）を
+      作ってください。データ：{{ $json }}」
+4. Set：最終メッセージを整形して出力</div>
+
+<h4>出力結果の例</h4>
+<div class="example-box">おはようございます。本日の東京の天気は晴れ、気温は18度の予報です。
+朝夕は冷えますので、薄手のジャケットがあると安心です。
+日中は過ごしやすい陽気になりそうですので、外回りの方もどうぞ快適に。</div>
+
+<p>S3までは<strong>ダミーデータ</strong>でこのフローを組んでいましたが、今回は<strong>本当に今の東京の天気が取れて、AIが実データから文章を生成</strong>します。この違いが「手足を得る」という言葉の実感に繋がります。</p>
+
+<hr>
+
+<h3>よくあるつまずきどころ</h3>
+<div class="tip-box">
+<ul>
+<li><strong>HTTP Request が401 (Unauthorized)</strong>：APIキーが正しくない／Credentialsが選択されていない／キーが無効化されている。発行元サイトで最新のキーを確認する。</li>
+<li><strong>HTTP Request が429 (Too Many Requests)</strong>：レートリミット超過。無料プランで呼び出し回数上限に達していないか確認。</li>
+<li><strong>取得データが空 or 404</strong>：URLのパラメータ指定ミス。ドキュメントの例をそのまま貼って動くか確認する。</li>
+<li><strong>AIノードで「API key not set」</strong>：OpenAI/Gemini側のCredentialsが未設定。Credentialsを作ってノードに紐付ける。</li>
+<li><strong>AIに渡すデータが大きすぎてエラー</strong>：取得したJSON全体ではなく、必要な項目だけSetノードで絞ってからAIに渡す。</li>
+<li><strong>Webhookを使ったがTestモードで一度しか受信しない</strong>：Test URLは実行中の1回だけ有効。本番URLに切り替えるか、再度Test実行して送信する。</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>この課題で学んだことの広がり</h3>
+<ul>
+<li><strong>API一覧が自分の武器になる</strong>：一度HTTP Requestの使い方を覚えれば、世の中の大半のAPIを叩けるようになる。社内APIにもつながる。</li>
+<li><strong>AIノードの位置づけが分かる</strong>：外部から取得した生データをAIに渡して「人が読める形」に変換する、という組み合わせが業務自動化の王道パターン。</li>
+<li><strong>セキュリティ感覚</strong>：API漏洩で青ざめる経験をする前に、Credentials機能を習慣づけておくのが長期的に一番効く。</li>
+</ul>
+
+<hr>
+
+<h3>実務での活用イメージ</h3>
+<ul>
+<li><strong>競合調査の自動化</strong>：プレスリリース配信サービスのAPIを叩いて競合キーワードで絞り込み、AIで「先週の競合動向3行サマリ」を生成してSlackに投稿</li>
+<li><strong>顧客からの問い合わせフォーム対応</strong>：フォーム送信をWebhookで受けて、AIで問い合わせカテゴリを判定し、担当者のSlackにメンション</li>
+<li><strong>社内データの定期レポート</strong>：社内APIで前日の売上／受注数を取得し、AIで「気になる変化」をコメント付きでレポート化</li>
+<li><strong>SNS監視</strong>：X(Twitter)・RedditなどのAPIで自社名を検索し、AIで感情分析／話題抽出</li>
+</ul>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。API連携のエラー対処やCredentialsの設定方法について具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

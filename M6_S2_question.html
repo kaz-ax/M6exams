@@ -31,10 +31,27 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 
 <h3>成果物</h3>
 <ul>
-<li><strong>ワークフロー全体のキャンバス画像</strong> ── すべてのノードが線でつながって見える状態のスクリーンショット</li>
-<li><strong>実行成功時のExecutions画面</strong> ── Executions一覧で「Success」（緑のチェック）が表示されているスクリーンショット</li>
+<li><strong>ワークフロー全体＋実行成功時の画面スクリーンショット</strong> ── 以下の条件を満たす1枚の画像：
+　<ul>
+　<li>すべてのノードが1画面に収まっており、線でつながっている</li>
+　<li>実行した際に<strong>各ノードが緑色のチェックで表示されている</strong>（=正常実行）</li>
+　<li>赤いエラー表示（×印／赤枠）が出ていない</li>
+　</ul>
+</li>
 <li><strong>各ノードの役割メモ</strong> ── 各ノードが「何をするノードか」を1〜2行で説明したもの</li>
 </ul>
+
+<p>提出するスクリーンショットのイメージは以下の通りです。</p>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s2/s2_success_example.png" alt="n8nキャンバス：全ノードが緑のチェックで正常実行された状態" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">✅ 提出OKの例：すべてのノードが緑のチェックで表示されている（「時刻で挨拶を分岐」フロー）</figcaption>
+</figure>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s2/s2_error_example.png" alt="n8nキャンバス：エラーで止まっている状態" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">❌ 提出NGの例：ノードが赤く表示されエラーで止まっている</figcaption>
+</figure>
 
 <hr>
 
@@ -64,36 +81,32 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 
 <h4>ステップ② ワークフローを組む</h4>
 <ol>
-<li>n8nのダッシュボードで「<strong>Create Workflow</strong>」をクリックして新規ワークフローを作成</li>
+<li>n8nのダッシュボードから<strong>新しいワークフローを作成</strong>（「+」ボタン／「Start from scratch」など画面のボタン）</li>
 <li>最初のノードに <strong>Manual Trigger</strong> を置く（「手動で実行する」スタート地点）</li>
 <li>ステップ①で決めたテーマに沿って、ノードを追加し線でつなぐ</li>
 <li>分岐ノード（If または Switch）の条件を設定する</li>
 <li>各ノードのパラメータ（入力値・条件など）を埋める</li>
-<li>ワークフローに分かりやすい名前を付けて保存する</li>
+<li>ワークフローに分かりやすい名前を付けて<strong>「Save」</strong>ボタンで保存する</li>
 </ol>
 
 <h4>ステップ③ 実行する</h4>
 <ol>
-<li>キャンバス下部の「<strong>Test workflow</strong>」または Manual Trigger ノードの「Execute step」をクリック</li>
+<li>キャンバス下部中央の<strong>「Execute workflow」</strong>ボタン（三角フラスコのアイコン付き）をクリック</li>
 <li>各ノードに緑のチェックが付き、最後まで処理が通ることを確認</li>
-<li>左サイドバーの <strong>Executions</strong> をクリックして、今回の実行が「Success」として記録されていることを確認</li>
+<li>実行が成功すると、画面右下に<strong>「Workflow executed successfully」</strong>の緑色の通知が表示される</li>
 </ol>
 
 <div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
 <strong>エラーで止まったときは</strong>
 <ul style="margin: 5px 0;">
 <li>赤くなったノードをクリックして、エラーメッセージを確認する</li>
-<li>よくある原因：必須項目が未入力／データの参照名（変数名）が間違っている／分岐条件が成立していない</li>
+<li>よくある原因：必須項目が未入力／データの参照名（変数名）が間違っている／分岐条件が成立していない（例：「Wrong type: '' is a string but was expecting a number」など）</li>
 <li>動画を見直す／AIにエラーメッセージを貼り付けて原因を聞く、で大体解決します（この"デバッグ"自体はセクション6で詳しく扱います）</li>
 </ul>
 </div>
 
 <h4>ステップ④ スクリーンショットを撮って提出</h4>
-<p>以下の2枚を必ず撮ってください。</p>
-<ol>
-<li><strong>キャンバス全体</strong>：ワークフローのすべてのノードが1画面に収まるようにズームアウトした状態。ノード名と線が見えること</li>
-<li><strong>Executions画面</strong>：左サイドバーの Executions を開き、今回の実行が「Success」で表示されている画面</li>
-</ol>
+<p>ワークフローを実行して<strong>すべてのノードが緑のチェックマーク</strong>になった状態で、1画面に収まるようにズームアウトしてスクリーンショットを撮影してください。赤いエラー表示が出ていないことを確認してから撮るのがポイントです。</p>
 
 <hr>
 
@@ -117,11 +130,9 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 
 ---
 
-■ キャンバス全体のスクリーンショット：
-（すべてのノードが線でつながって見える画面）
-
-■ Executions画面のスクリーンショット：
-（今回の実行が「Success」になっている画面）
+■ スクリーンショット：
+（ワークフロー全体＋すべてのノードが緑のチェックで正常実行された状態の画面。
+　赤いエラー表示がなく、ノードが緑表示になっているもの）
 </div>
 
 

@@ -81,6 +81,54 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 「認証管理」の採点要素を満たすため、<strong>AIノード（Gemini / OpenAI）のAPIキーは必ずCredentialsで管理</strong>してください。直接プロンプトやURLに書き込むのは絶対NGです。
 </div>
 
+<div style="background: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>📘 サンプルワークフロー：Open-Meteoで東京の天気を取得</strong>
+
+<p style="margin-top: 8px;">APIキー取得が初心者には壁になりやすいので、<strong>登録不要で動かせる Open-Meteo</strong> をベースにしたサンプルワークフローを紹介します。このままなぞれば動きますし、緯度経度や項目を変えて応用もできます。</p>
+
+<p><strong>Open-Meteoを初心者におすすめする3つの理由：</strong></p>
+<ol style="margin: 5px 0;">
+<li><strong>登録・APIキー発行が完全に不要</strong>で、URLを叩くだけでいきなり動かせる</li>
+<li>レスポンスが<strong>シンプルなJSON</strong>で構造が追いやすい</li>
+<li>緯度経度を変えれば<strong>世界中の天気</strong>が取れるので応用が効く</li>
+</ol>
+
+<p><strong>このワークフローの概要：</strong><br>
+Open-Meteo APIで東京の現在の気象データを取得し、Geminiに渡して日本語で天気と服装アドバイスを要約させるワークフローです。今回は<strong>東京（緯度35.6895, 経度139.6917）</strong>の現在の<strong>気温・湿度・風速・WMO天気コード</strong>を取得する設定にしています。</p>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s4/s4_sample_workflow.png" alt="Open-Meteoサンプルワークフローの全体図" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">ワークフロー全体：Manual Trigger → 東京の天気を取得（HTTP Request）→ AIで天気を要約（Google Gemini Chat Model 付きのAIノード）→ 最終メッセージ整形（Edit Fields）</figcaption>
+</figure>
+
+<p><strong>HTTP Requestノードの設定例：</strong></p>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s4/s4_http_request_settings.png" alt="HTTP Requestノードのパラメータ設定画面" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">HTTP Requestノードのパラメータ設定（左）と、実際に取得したOutput（右）</figcaption>
+</figure>
+
+<p><strong>設定値の内訳：</strong></p>
+<ul style="margin: 5px 0;">
+<li><strong>Method</strong>：<code>GET</code></li>
+<li><strong>URL</strong>：<code>https://api.open-meteo.com/v1/forecast</code></li>
+<li><strong>Authentication</strong>：<code>None</code>（Open-Meteoはキー不要）</li>
+<li><strong>Send Query Parameters</strong>：ON（オン）</li>
+<li><strong>Query Parameters（4つ追加）</strong>：
+  <ul style="margin: 3px 0;">
+  <li><code>latitude</code>：<code>35.6895</code>（東京の緯度）</li>
+  <li><code>longitude</code>：<code>139.6917</code>（東京の経度）</li>
+  <li><code>current</code>：<code>temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m</code>（取得する気象項目）</li>
+  <li><code>timezone</code>：<code>Asia/Tokyo</code></li>
+  </ul>
+</li>
+</ul>
+
+<p><strong>取得できるOutputの例：</strong>上の図の右側のように、現在時刻の緯度・経度・気温・湿度・天気コード・風速などがJSON形式で返ってきます。この結果を次のAIノードに渡して、「晴れ／気温18度なので薄手のジャケットがおすすめです」のような日本語の要約文に変換するのが後段の処理です。</p>
+
+<p style="margin-top: 10px;"><strong>応用のヒント：</strong>緯度経度を変えれば他の都市に変更できます（例：ニューヨーク 40.7128, -74.0060／大阪 34.6937, 135.5023）。<code>current</code> に指定する項目を変えれば取得データの内容も調整できます（<a href="https://open-meteo.com/en/docs" target="_blank">公式ドキュメント</a>参照）。</p>
+</div>
+
 <h4>ステップ② APIキーを取得する（該当する場合のみ）</h4>
 <p>上記の推奨APIを使う場合、公式サイトでアカウント登録してAPIキーを発行します。キーは画面に1度だけ表示されることが多いので、<strong>安全な場所（パスワードマネージャーなど）にコピーして保管</strong>してください。</p>
 

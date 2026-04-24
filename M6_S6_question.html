@@ -91,9 +91,14 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 <p>赤くなったノードをクリック、または右上の通知からエラー詳細を開き、以下3点をメモします。</p>
 <ol>
 <li><strong>どのノード</strong>で止まったか（ノード名）</li>
-<li><strong>どんなデータ</strong>が原因か（ノードの「Input」「Output」タブで前後のデータを確認）</li>
+<li><strong>どんなデータ</strong>が原因か（ノードをダブルクリックで開いた詳細パネルの「Input」（左）と「Output」（右）のタブで、前後のデータを確認）</li>
 <li><strong>エラーメッセージの内容</strong>（テキストでコピペしておく）</li>
 </ol>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s6/s6_input_output_tabs.png" alt="n8nのノード詳細パネル。左にINPUT、中央にParameters/Settings、右にOUTPUTが並ぶ3カラム構成" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">ノード詳細パネルの構成：<strong>左「INPUT」</strong>（前ノードからの入力データ）／中央「Parameters・Settings」（このノードの設定）／<strong>右「OUTPUT」</strong>（このノードの出力データ）。デバッグ時はInput／Outputのデータを見比べて、どこでデータが想定と違ってしまったかを特定する</figcaption>
+</figure>
 
 <h4>ステップ④ AIレスキューで原因を聞く</h4>
 <p>エラーメッセージをChatGPTまたはGeminiに貼り付けて相談します。</p>

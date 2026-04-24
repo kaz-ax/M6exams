@@ -86,11 +86,16 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 
 <h4>ステップ③ n8nのCredentialsにキーを登録する</h4>
 <ol>
-<li>n8n左サイドバーから<strong>「Credentials」</strong>を開く</li>
+<li>n8nの画面上部のタブから<strong>「Credentials」</strong>を開く（Workflows／Credentials／Executions／Variables／Data tables が並ぶタブ群のうちの1つ）</li>
 <li>画面右上の新規作成ボタン（「+」や「Create Credential」など）をクリック</li>
 <li>使うAPIに対応するクレデンシャルタイプを検索（例：OpenAI API、Google Gemini(PaLM) API、HTTP Header Auth、HTTP Query Auth など）</li>
 <li>APIキーを入力し、分かりやすい名前を付けて保存</li>
 </ol>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s4/s4_credentials_list.png" alt="n8nのCredentials一覧画面。OpenAI、Google Drive、Google Sheets、Gmail、Header Authなど保存済みのクレデンシャルが並んでいる" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">Credentials一覧画面：登録したクレデンシャルが「名前・タイプ・最終更新日」で並ぶ。APIキーの値は一覧には表示されない</figcaption>
+</figure>
 
 <div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
 <strong>セキュリティ注意</strong>

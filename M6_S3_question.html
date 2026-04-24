@@ -31,11 +31,10 @@ Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格
 
 <h3>成果物</h3>
 <ul>
-<li><strong>AIに投げたプロンプト</strong> ── 要件定義書＋JSON生成依頼の全文</li>
+<li><strong>AIに投げたプロンプト</strong> ── 要件定義書＋JSON生成依頼の全文（テキスト）</li>
 <li><strong>AIが生成したJSON</strong> ── コピー可能な形で貼り付け（長ければ先頭〜末尾を抜粋＋行数記載でも可）</li>
-<li><strong>インポート後のキャンバス画像</strong> ── n8nにJSONを貼り付けた直後の状態</li>
-<li><strong>パラメータ調整のBefore/After</strong> ── 1〜2箇所、どこを何に変えたかを記述</li>
-<li><strong>Executions「Success」画面</strong> ── 実行成功したことがわかるスクリーンショット</li>
+<li><strong>パラメータ調整のBefore/After</strong> ── 1〜2箇所、どこを何に変えたかを記述（テキスト）</li>
+<li><strong>実行成功時のワークフロー画面スクリーンショット</strong> ── インポートして調整したワークフローを実行し、<strong>すべてのノードが緑色のチェックで表示</strong>されている（=正常実行）状態の1画像</li>
 <li><strong>振り返り</strong> ── 3〜5行の短い感想（何が便利だったか／どこでつまずいたか）</li>
 </ul>
 
@@ -50,7 +49,7 @@ Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格
 <strong>AIへのプロンプトの例</strong><br><br>
 以下の要件定義書に沿って、<strong>n8nでそのままインポートして動かせるワークフローのJSON</strong>を書いてください。<br><br>
 【条件】<br>
-・トリガーは Manual Trigger にしてください（手動で Test workflow を押すと動く形）<br>
+・トリガーは Manual Trigger にしてください（手動で「Execute workflow」ボタンを押すと動く形）<br>
 ・外部サービス接続が必要な部分（Gmail / Slack / Gemini API など）は、今回は実際に接続しません。代わりに<strong>Edit Fields (Set) ノードでダミーデータを返す擬似ノード</strong>に置き換えてください<br>
 ・分岐がある場合は If または Switch ノードで実装してください<br>
 ・各ノードには日本語で分かりやすい名前を付けてください<br>
@@ -70,11 +69,11 @@ Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格
 
 <h4>ステップ② n8nにインポートする</h4>
 <ol>
-<li>n8nで新しいワークフローを作成（「Create Workflow」）</li>
-<li>キャンバス右上の「…」メニュー → <strong>「Import from File」または「Import from Clipboard」</strong> を選択</li>
-<li>AIが生成したJSONを貼り付けてインポート</li>
+<li>n8nで新規ワークフローを作成（画面の「+」ボタン／「Start from scratch」など）</li>
+<li>AIが生成したJSONをクリップボードにコピー</li>
+<li>空のキャンバス上で<strong>貼り付け（Cmd/Ctrl + V）</strong>するか、キャンバス右上のメニュー（三点リーダー）から「Import from File…」を選んでJSONファイルを読み込む</li>
 <li>キャンバスにノードが並び、線でつながっていることを確認</li>
-<li>ワークフローに分かりやすい名前を付けて保存</li>
+<li>ワークフローに分かりやすい名前を付けて「Save」ボタンで保存</li>
 </ol>
 
 <h4>ステップ③ パラメータを自分の業務に合わせて調整する</h4>
@@ -93,10 +92,10 @@ Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格
 
 <h4>ステップ④ 実行して「Success」にする</h4>
 <ol>
-<li>「Test workflow」または Manual Trigger の「Execute step」で実行</li>
-<li>すべてのノードに緑のチェックが付くことを確認</li>
-<li>Executions画面でSuccessとして記録されていることを確認</li>
-<li>エラーで止まった場合は、赤くなったノードのメッセージを確認して修正、または AI にエラー内容を貼って相談</li>
+<li>キャンバス下部中央の<strong>「Execute workflow」</strong>ボタンをクリック</li>
+<li>すべてのノードに緑のチェックが付き、実行成功時に右下に「Workflow executed successfully」の通知が出ることを確認</li>
+<li>エラーで止まった場合は、赤くなったノードのメッセージを確認して修正、または AI にエラー内容を貼って相談（「JSON先頭の ```  記号を消す」で解決することが多い）</li>
+<li>再度実行し、全ノードが緑になった状態でスクリーンショットを撮影</li>
 </ol>
 
 <hr>
@@ -120,11 +119,6 @@ Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格
 
 ---
 
-■ インポート後のキャンバス画像：
-（AIが生成したJSONをインポートした直後の、ノードが並んだキャンバス全体）
-
----
-
 ■ パラメータ調整のBefore/After：
 　調整箇所1：
 　　ノード名：（例：Set_記事タイトル）
@@ -138,8 +132,9 @@ Gmail／Slack／Geminiなど外部APIとの接続は、セクション4で本格
 
 ---
 
-■ Executions「Success」画面：
-（実行が成功したことがわかるスクリーンショット）
+■ 実行成功時のワークフロー画面スクリーンショット：
+（インポートして調整したワークフローを実行し、すべてのノードが
+緑色のチェックで表示されている状態。赤いエラー表示が出ていないもの）
 
 ---
 

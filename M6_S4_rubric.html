@@ -31,21 +31,21 @@ hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
 </tr>
 <tr>
 <td><strong>①外部API連携</strong><br>（10点）</td>
-<td>HTTP Request（または Webhook）ノードで<strong>本物の外部API</strong>と通信し、Executionsに「Success」が記録されている。取得データが出力結果に反映されている。</td>
-<td>HTTP Requestノードは置かれているが実行が赤（エラー）、または取得したデータが後続ノードで使われていない。</td>
+<td>HTTP Request（または Webhook）ノードで<strong>本物の外部API</strong>と通信し、実行スクショで該当ノードが<strong>緑のチェック</strong>になっている。取得データが出力結果に反映されている。</td>
+<td>HTTP Requestノードは置かれているが実行で赤エラー、または取得したデータが後続ノードで使われていない。</td>
 <td>HTTP Request／Webhookノードが使われていない、またはSetノードで擬似化したまま（S3と同じ構成）。</td>
 </tr>
 <tr>
 <td><strong>②AI処理</strong><br>（8点）</td>
-<td>Gemini または OpenAI ノードを使い、取得したデータを<strong>要約／整形／判定</strong>など何らかの加工をしている。出力結果が提出されている。</td>
+<td>Gemini または OpenAI ノードを使い、取得したデータを<strong>要約／整形／判定</strong>など何らかの加工をしている。出力結果がテキストで提出されている。</td>
 <td>AIノードは置かれているが、出力が単にデータをオウム返しで返しているだけ／出力結果が未提出。</td>
 <td>AIノードが使われていない。</td>
 </tr>
 <tr>
 <td><strong>③認証管理</strong><br>（7点）</td>
-<td>APIキーが<strong>Credentials機能</strong>に保存されており、ノードからCredentials参照で使われている。Credentials一覧のスクリーンショットが提出されている。キーの値はスクショに映っていない。</td>
-<td>Credentialsは使っているがスクショ未提出、またはスクショに値が映ってしまっている（セキュリティ上は減点対象）。</td>
-<td>APIキーが<strong>ノードのURL・Header・Body に直書き</strong>されている／Credentialsを使っていない／スクショ全て未提出。</td>
+<td>APIキーが<strong>Credentials機能</strong>に保存されており、ノードからCredentials参照で使われている。使用Credentialsの<strong>名前とタイプ</strong>が提出テンプレに明記されている。実行スクショにAPIキーの値が映り込んでいない。</td>
+<td>Credentialsは使っているが名前／タイプの記載が不十分、またはスクショにキーの値が映ってしまっている（セキュリティ上は重点減点）。</td>
+<td>APIキーが<strong>ノードのURL・Header・Body に直書き</strong>されている／Credentialsを使っていない／Credentialsの記載が一切ない。</td>
 </tr>
 <tr>
 <td><strong>④振り返り</strong><br>（5点）</td>
@@ -62,7 +62,7 @@ hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
 <p><strong>選んだAPIの種類は評価しません。</strong>天気、ニュース、技術記事、公開データなど、受講生が選んだAPIが何であれ、実際に動いていれば可とします。</p>
 <p><strong>Webhook型で作った場合も同条件で評価します。</strong>「外部との実通信が成立している」ことが核なので、取りに行く（HTTP Request）／受け取る（Webhook）のどちらでも満点対象です。</p>
 <p><strong>AIの出力文の品質は評価しません。</strong>プロンプトの工夫で出力が改善できそうな場合はフィードバックで伝えるに留め、採点は「AIノードが機能しているか」で判断します。</p>
-<p><strong>セキュリティ違反は重点減点対象です。</strong>特にスクショにAPIキーが映っている／キーを直書きしている場合は、他の項目が優秀でも③は0点とし、キーの再発行を促してください。</p>
+<p><strong>セキュリティ違反は重点減点対象です。</strong>特に実行スクショにAPIキーが映っている／キーを直書きしている場合は、他の項目が優秀でも③は0点とし、キーの再発行を促してください。</p>
 </div>
 
 <hr>
@@ -70,7 +70,7 @@ hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
 <h3>フィードバックのポイント</h3>
 <div class="supplement-box">
 <p><strong>高評価のケース：</strong><br>
-HTTP Requestで実APIに接続できており、AIで意味のある加工がされていて、Credentials管理がスクショで示されており、振り返りで「S3の擬似フローとの違いを実感として書けている」場合、満点に近い評価です。Schedule Triggerで毎日定時実行にしている提出はボーナス的に高く評価してもOKです。</p>
+HTTP Requestで実APIに接続できており、AIで意味のある加工がされていて、Credentialsの名前とタイプが明記され、実行スクショで全ノード緑のチェック（かつAPIキーが映り込んでいない）、振り返りで「S3の擬似フローとの違いを実感として書けている」場合、満点に近い評価です。Schedule Triggerで毎日定時実行にしている提出はボーナス的に高く評価してもOKです。</p>
 
 <p><strong>改善が必要なケース：</strong><br>
 401/429などのHTTPエラーで止まっている場合は、「エラーメッセージをAIに貼って原因を相談してみてください。多くはキーの設定ミスかレート制限です」とフィードバック。AIの出力がオウム返しになっている場合は、「プロンプトに『〇〇形式で要約して』『〇文字以内で』など明示的な加工指示を入れると出力が変わります」と具体的に促します。</p>

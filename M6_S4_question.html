@@ -33,23 +33,27 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 <li>外部API呼び出し：<strong>HTTP Requestノード</strong>で実APIを1回以上叩く</li>
 <li>AI処理：<strong>Gemini または OpenAI ノード</strong>でデータを要約／整形／判定など</li>
 <li>認証管理：APIキーは<strong>n8nのCredentials機能に保存</strong>し、HTTP Requestノードから参照する（URL・Headerに直書きNG）</li>
-<li>実行成功：Executionsに「Success」として記録されていること</li>
+<li>実行成功：ワークフローを実行してすべてのノードが緑のチェックで表示されること</li>
 </ul>
 
 <div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
 <strong>代替オプション：Webhook受信型でもOK</strong><br>
-「外から情報を取りに行く」のではなく、<strong>「外から情報を受け取る」</strong>パターン（Webhook）で作ってもOKです。その場合、Webhookノードで受けて → AIで処理 → 結果を返す／保存する、という構成になります。Webhookのテストは n8n の「Test URL」に<code>curl</code>やSlackのOutgoing Webhookから送信して動作確認します。
+「外から情報を取りに行く」のではなく、<strong>「外から情報を受け取る」</strong>パターン（Webhook）で作ってもOKです。その場合、Webhookノードで受けて → AIで処理 → 結果を返す／保存する、という構成になります。Webhookのテストは n8n のWebhookノードが発行するTest URLに<code>curl</code>やSlackのOutgoing Webhookから送信して動作確認します。
 </div>
 
 <h3>成果物</h3>
 <ul>
-<li><strong>使用したAPIの説明</strong> ── 何のAPIを使い、何が取れるのか（3〜5行）</li>
-<li><strong>ワークフロー全体のキャンバス画像</strong></li>
-<li><strong>Credentials一覧画面のスクリーンショット</strong> ── 「保存したクレデンシャル名」が見える画面（※キーの値は見えなくてOK／むしろ見せない）</li>
-<li><strong>Executions「Success」画面</strong></li>
-<li><strong>出力結果の例</strong> ── AIが最終的に出した文章やデータ（1つ分）</li>
+<li><strong>使用したAPIの説明</strong> ── 何のAPIを使い、何が取れるのか（3〜5行／テキスト）</li>
+<li><strong>使用したCredentials名とタイプ</strong> ── 例：「OpenWeather_MyKey（HTTP Header Auth）」「Gemini_MyKey（Google Gemini API）」のようにテキストで列挙（※キーの値は絶対に書かない）</li>
+<li><strong>出力結果の例</strong> ── AIが最終的に出した文章やデータ（1つ分／テキスト）</li>
+<li><strong>実行成功時のワークフロー画面スクリーンショット</strong> ── HTTP Request・AI・配信先などすべてのノードが<strong>緑色のチェック</strong>で表示されている状態の1画像（=外部APIに実通信して正常実行されたことがわかる）</li>
 <li><strong>振り返り</strong> ── 3〜5行（S3の擬似フローと比べて何が違ったか／どこで詰まったか）</li>
 </ul>
+
+<div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>スクリーンショットの注意</strong><br>
+スクショを撮る前に、<strong>APIキーが画面に映り込んでいないか必ず確認</strong>してください。ノードのパラメータ画面を開いたまま撮ると、HTTP Requestのヘッダーなどにキーが見えてしまうことがあります。キャンバス全体（各ノードの詳細パネルが閉じた状態）での撮影が安全です。
+</div>
 
 <hr>
 
@@ -82,19 +86,19 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 
 <h4>ステップ③ n8nのCredentialsにキーを登録する</h4>
 <ol>
-<li>n8n左サイドバーの<strong>「Credentials」</strong>を開く</li>
-<li>「Add Credential」をクリック</li>
-<li>使うAPIに対応するクレデンシャルタイプを検索（例：OpenAI API、Gemini API、HTTP Header Auth、HTTP Query Auth など）</li>
+<li>n8n左サイドバーから<strong>「Credentials」</strong>を開く</li>
+<li>画面右上の新規作成ボタン（「+」や「Create Credential」など）をクリック</li>
+<li>使うAPIに対応するクレデンシャルタイプを検索（例：OpenAI API、Google Gemini(PaLM) API、HTTP Header Auth、HTTP Query Auth など）</li>
 <li>APIキーを入力し、分かりやすい名前を付けて保存</li>
 </ol>
 
 <div style="background: #fff3cd; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
 <strong>セキュリティ注意</strong>
 <ul style="margin: 5px 0;">
-<li>APIキーを<strong>HTTP RequestノードのURL・Header・Body に直書きしない</strong></li>
-<li>提出するスクリーンショットは、<strong>Credentials名は見せてOK／キーの値は映さない</strong></li>
+<li>APIキーを<strong>HTTP RequestノードのURL・Header・Body に直書きしない</strong>（必ずCredentials経由で参照）</li>
 <li>キーを誤って公開リポジトリやSlack公開チャンネルに貼らない（漏洩時は即Revokeして再発行）</li>
 <li>従量課金系APIの場合は<strong>利用上限を設定</strong>（OpenAIなら Settings → Billing → Usage limits）</li>
+<li>提出テンプレートにCredentials名を書くときも<strong>キーの値は一切書かない</strong>（名前とタイプのみ）</li>
 </ul>
 </div>
 
@@ -114,10 +118,10 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 
 <h4>ステップ⑤ 実行して「Success」にする</h4>
 <ol>
-<li>「Test workflow」または Manual Trigger の「Execute step」で実行</li>
+<li>キャンバス下部中央の<strong>「Execute workflow」</strong>ボタンをクリック</li>
 <li>HTTP Requestノードをクリックして「Output」タブで<strong>実際に取得したAPIデータ</strong>が見えることを確認</li>
 <li>AIノードのOutputで<strong>要約結果</strong>が出ていることを確認</li>
-<li>Executions画面で Success になっていることを確認</li>
+<li>すべてのノードが緑のチェックになっていることを確認し、スクリーンショットを撮影（撮影前にノードの詳細パネルを閉じ、APIキーが映らないように注意）</li>
 </ol>
 
 <hr>
@@ -132,24 +136,25 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 ■ 使用したAPI：
 　API名：（例：OpenWeatherMap）
 　何が取れるのか：（例：指定した都市の現在の天気と気温）
-　認証方式：（例：APIキー（Credentials「OpenWeather_MyKey」として保存））
+　認証方式：（例：APIキー）
 
----
-
-■ ワークフロー全体のキャンバス画像：
-（すべてのノードが線でつながって見える状態）
-
-■ Credentials一覧画面のスクリーンショット：
-（n8nの Credentials 画面 ─ 保存したクレデンシャル名が見える画面
-　※APIキーの値は絶対に映さない）
-
-■ Executions「Success」画面：
-（実行が成功したことがわかるスクリーンショット）
+■ 使用したCredentials一覧：
+　（名前とタイプのみ列挙。例：
+　　・OpenWeather_MyKey（HTTP Header Auth）
+　　・Gemini_MyKey（Google Gemini(PaLM) API）
+　※APIキーの値は絶対に書かない）
 
 ---
 
 ■ 出力結果の例：
 （AIが最終的に出した文章やデータを1つ貼り付け）
+
+---
+
+■ 実行成功時のワークフロー画面スクリーンショット：
+（HTTP Request・AI・配信などすべてのノードが緑色のチェックで
+表示されている状態。赤いエラー表示が出ておらず、詳細パネルが
+閉じていてAPIキーが映っていないもの）
 
 ---
 

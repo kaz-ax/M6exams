@@ -49,8 +49,8 @@ hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
 </tr>
 <tr>
 <td><strong>④結合テスト（エンドツーエンド動作）</strong><br>（6点）</td>
-<td>Schedule Trigger が設定されている（設定画面のスクショ提出）。かつManual実行でSuccessのExecutionsが記録されている（スクショ提出）。振り返りで「通しで動かして気づいたこと」が書かれている。</td>
-<td>Schedule Trigger 未設定／Executionsスクショ未提出／振り返りが1〜2行で気づきなし。</td>
+<td>Schedule Trigger の設定内容がテキストで明記されている（例：「Field=Days, Hour=9」）。配信先スクショで実配信が確認でき、振り返りで「通しで動かして気づいたこと」が書かれている。</td>
+<td>Schedule Trigger の設定内容の記述が曖昧／配信先スクショで実配信が確認できない／振り返りが1〜2行で気づきなし。</td>
 <td>Schedule Trigger 未設定、かつ結合実行の証跡もない。</td>
 </tr>
 </table>
@@ -61,7 +61,7 @@ hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
 <div class="supplement-box">
 <p><strong>配信先の種類は評価しません。</strong>Slackでもメールでもスプシでも、実際に届いていれば満点対象です。Xは難度が高く任意扱い。</p>
 <p><strong>テーマの業務関連性は評価しません。</strong>業務と直接関係のない題材（趣味系ブログのRSSなど）でも、4要素が揃って動けばOKです。</p>
-<p><strong>Schedule Triggerの実際の発火は待ちません。</strong>「設定されている」「Manual実行でSuccess」の2点で結合テストは成立とみなします。</p>
+<p><strong>Schedule Triggerの実際の発火は待ちません。</strong>「設定内容がテキストで明記されている」「Manual実行で配信先に届いた証跡がある」の2点で結合テストは成立とみなします。</p>
 <p><strong>重複投稿防止・エラーハンドリングは求めません。</strong>"本番運用"に近づけるコツは解説に記載しましたが、S5では必須要素にしません。S6以降の応用枠です。</p>
 <p><strong>セキュリティ違反（APIキー直書き・スクショにキー映る）は重点減点。</strong>①〜③の該当項目を0点にするとともに、Credentials機能の再設定を促してください。</p>
 </div>

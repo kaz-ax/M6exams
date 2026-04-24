@@ -37,12 +37,12 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 <h3>成果物</h3>
 <p>選んだ1つのエラーについて、以下6点を提出します。</p>
 <ul>
-<li><strong>エラー発生時のExecutions画面スクリーンショット</strong> ── 赤で止まっているノードが見える画面</li>
-<li><strong>エラー詳細ログ</strong> ── エラーメッセージの全文テキスト</li>
+<li><strong>エラーの起こし方</strong> ── どのノードの何を書き換えてエラーを発生させたか（テキスト）</li>
+<li><strong>エラーメッセージ全文</strong> ── Executionsに表示されたエラー内容をコピペ（テキスト）</li>
 <li><strong>ログ解析メモ</strong> ── どのノードで／どんなデータで／なぜ止まったかの自分なりの解釈（2〜3行）</li>
-<li><strong>AIレスキューのチャットログ</strong> ── エラーメッセージをAIに貼り付けて相談したやり取り（1〜3往復）</li>
-<li><strong>修正内容のBefore/After</strong> ── どこを何に変えたか</li>
-<li><strong>修正後のExecutions「Success」画面</strong> ── 再実行で通ったことがわかる画面</li>
+<li><strong>AIレスキューのチャットログ</strong> ── エラーメッセージをAIに貼り付けて相談したやり取り（1〜3往復／テキスト）</li>
+<li><strong>修正内容のBefore/After</strong> ── どこを何に変えたか（テキスト）</li>
+<li><strong>修正後のワークフロー画面スクリーンショット</strong> ── 再実行後、<strong>すべてのノードが緑色のチェック</strong>で表示されている状態の1画像</li>
 </ul>
 
 <hr>
@@ -79,14 +79,14 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 </ul>
 </div>
 
-<p>AまたはBいずれかでワークフローを実行し、エラーが発生すること／Executionsでエラーとして記録されること（Bの場合は出力が`undefined`になること）を確認し、画面キャプチャを残します。</p>
+<p>AまたはBいずれかでキャンバス下部の「Execute workflow」ボタンを押して実行し、エラーが発生すること（赤いノード／エラー通知／Bの場合は出力が`undefined`になること）を確認し、<strong>エラーメッセージ全文をテキストでコピー</strong>しておきます。</p>
 
 <h4>ステップ③ エラーを診断する（ログ解析）</h4>
-<p>Executionsから該当する実行をクリックし、<strong>赤くなったノードのエラーメッセージ</strong>を確認します。以下3点をメモします。</p>
+<p>赤くなったノードをクリック、または右上の通知からエラー詳細を開き、以下3点をメモします。</p>
 <ol>
 <li><strong>どのノード</strong>で止まったか（ノード名）</li>
-<li><strong>どんなデータ</strong>が原因か（入力タブ・出力タブを見る）</li>
-<li><strong>エラーメッセージの内容</strong>（コピペしておく）</li>
+<li><strong>どんなデータ</strong>が原因か（ノードの「Input」「Output」タブで前後のデータを確認）</li>
+<li><strong>エラーメッセージの内容</strong>（テキストでコピペしておく）</li>
 </ol>
 
 <h4>ステップ④ AIレスキューで原因を聞く</h4>
@@ -110,9 +110,9 @@ AIの回答で直らない場合は、動画4で紹介した<a href="https://com
 <h4>ステップ⑤ 修正して再実行 → Success</h4>
 <ol>
 <li>AIまたはコミュニティのアドバイスをもとに、該当ノードの設定を直す</li>
-<li>ワークフローを再実行</li>
-<li>Executionsで「Success」になることを確認</li>
-<li>スクリーンショットを撮って控える</li>
+<li>「Save」ボタンで保存してから、キャンバス下部の「Execute workflow」ボタンで再実行</li>
+<li>すべてのノードが緑のチェックで表示され、右下に「Workflow executed successfully」の通知が出ることを確認</li>
+<li>その状態でスクリーンショットを撮影（提出用）</li>
 </ol>
 
 <hr>
@@ -133,11 +133,8 @@ AIの回答で直らない場合は、動画4で紹介した<a href="https://com
 （例：OpenAI Credentialsに保存していたAPIキーを1文字書き換えた）
 （例：Slackメッセージ本文で {{ $json.summary }} を {{ $json.summaryXYZ }} に書き換えた）
 
-■ エラー発生時のExecutions画面スクリーンショット：
-（赤で止まったノード、または出力が`undefined`になっている画面）
-
 ■ エラーメッセージ全文：
-（コピペで貼り付け）
+（Executionsや赤いノードの詳細からコピペして貼り付け）
 
 ■ ログ解析メモ（2〜3行）：
 　どのノードで：（例：OpenAI Chat Model ノード）
@@ -151,8 +148,11 @@ AIの回答で直らない場合は、動画4で紹介した<a href="https://com
 　Before：（例：Credentials「OpenAI_Key」のkey欄が`sk-...XYZ`）
 　After ：（例：正しいキー`sk-...ABC`に戻した）
 
-■ 修正後のExecutions「Success」画面：
-（再実行で成功したことがわかるスクショ）
+---
+
+■ 修正後のワークフロー画面スクリーンショット：
+（再実行後、すべてのノードが緑色のチェックで表示されている状態。
+　赤いエラー表示がないもの）
 
 ---
 

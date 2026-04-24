@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>問題文プレビュー：M6 まとめ演習</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #525252; line-height: 1.6; }
+h1 { font-size: 24px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { font-size: 18px; margin-top: 30px; }
+h4 { font-size: 16px; margin-top: 20px; }
+hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<h1>モジュール6 まとめ演習：AIエージェント実装ケーススタディ ─ 卒業後に使えるポートフォリオ1枚</h1>
+
+<div style="background: #fee2e2; border: 2px solid #dc2626; padding: 15px; margin: 15px 0; border-radius: 8px;">
+<strong>🔴 提出方法（最重要）</strong><br><br>
+本課題は <strong>AI+のGoogleアカウントで作成したGoogleドキュメント</strong> で提出します。<br>
+共有設定は必ず <strong>「AI+ 組織内のリンクを知っている全員が閲覧可」</strong> にしてください（組織外からはアクセスできない状態）。<br>
+採点システムが読み込めるよう、<strong>提出前に必ずシークレットウィンドウで URL が開けるかセルフチェック</strong>してください。
+</div>
+
+<div style="background: #e0f2fe; border: 2px solid #0284c7; padding: 15px; margin: 15px 0; border-radius: 8px;">
+<strong>🎓 このまとめ演習は卒業後のポートフォリオとして使えます</strong><br><br>
+AI+ の基礎編6モジュール分のまとめ演習は、すべて卒業後に <strong>対外的にAIスキルや実績を示すポートフォリオ</strong>として活用できる設計になっています。LinkedIn、面接、社内LT、転職活動の実績資料などで、「このコースで何を作ったか・どんな課題を解決できるか」を具体的に示せるよう、<strong>外の人が読んでも価値が伝わる形</strong>で仕上げてください。
+</div>
+
+<h3>目的</h3>
+<p>モジュール5〜6で学んだ<strong>すべてのスキル</strong>（業務分解・Bot設計・RAG・要件定義・n8n実装・外部API連携・デバッグ・ツール選定）を統合し、<strong>1つのAIエージェント実装プロジェクト</strong>をケーススタディ形式でまとめます。</p>
+<p>ここまでの課題は「学ぶ」「作る」でした。まとめ演習は「見せる」。同じエージェントでも、<strong>ビフォー／アフターが定量的に語れる</strong>か、<strong>設計判断が言語化できているか</strong>で価値は何倍にも変わります。このスキルは、今後どの組織・どの職種でも、自分のAI活用実績を伝える武器になります。</p>
+
+<h3>課題</h3>
+<p>自分がこれまでに作ったAIエージェントを1つ選び（<strong>S5の完成版がおすすめ</strong>）、以下4セクション構成の<strong>ケーススタディ</strong>としてGoogleドキュメントにまとめてください。</p>
+<ol>
+<li>🎯 業務課題（Before）</li>
+<li>💡 設計と実装</li>
+<li>✅ 成果（After）</li>
+<li>📚 学びと次のステップ</li>
+</ol>
+
+<h3>成果物</h3>
+<ul>
+<li><strong>ファイル形式</strong>：Googleドキュメント（AI+のGoogleアカウントで作成）</li>
+<li><strong>共有設定</strong>：AI+ 組織内のリンクを知っている全員が閲覧可</li>
+<li><strong>長さの目安</strong>：1〜2ページ（A4相当）</li>
+</ul>
+
+<hr>
+
+<h3>雛形ドキュメントの構成（このとおりに作成）</h3>
+<p>マネージャーから共有される<strong>雛形Googleドキュメント</strong>を「ファイル → コピーを作成」で複製し、各セクションを埋めていってください。以下は雛形の構成プレビューです。</p>
+
+<div style="background: #f5f5f5; border: 1px solid #ccc; padding: 20px; margin: 15px 0; border-radius: 8px; font-family: monospace; font-size: 13px; line-height: 1.7;">
+<strong>【タイトル】</strong>（例：朝のAIニュースブリーフィングエージェント）<br>
+<strong>【受講生名】</strong>（記入）<br>
+<strong>【使用したツール】</strong>（例：n8n, Gemini API, Slack）<br>
+<strong>【解決した課題】</strong>（1行キャッチ。例：毎日30分の情報収集作業を0分に）<br>
+<br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+<strong>🎯 1. 業務課題（Before）（配点 5点）</strong><br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+・対象業務：<br>
+・頻度：<br>
+・現状の所要時間／人的コスト：<br>
+・現状の課題（定量データ歓迎）：<br>
+　例：週5日×30分＝週2.5時間、月10時間の手作業／月に3回の見落とし<br>
+<br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+<strong>💡 2. 設計と実装（配点 10点）</strong><br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+<strong>2-1. 要件定義（5要素）</strong><br>
+| 項目 | 内容 |<br>
+| --- | --- |<br>
+| ① 自動化したい業務 |   |<br>
+| ② トリガー |   |<br>
+| ③ 処理の流れ |   |<br>
+| ④ 入出力 |   |<br>
+| ⑤ 使用サービス・成功条件 |   |<br>
+<br>
+<strong>2-2. ツール選定（8ツールから）</strong><br>
+・選んだツール：<br>
+・選定理由（3〜5行、S7の比較表を根拠に）：<br>
+<br>
+<strong>2-3. ワークフロー構成図</strong><br>
+・Mermaid記法 または n8nキャンバスのスクリーンショット<br>
+<br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+<strong>✅ 3. 成果（After）（配点 10点）</strong><br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+<strong>3-1. 実行結果</strong><br>
+・配信先に実際に届いた様子のスクリーンショット または 実際の出力例<br>
+<br>
+<strong>3-2. 効果（定量）</strong><br>
+| 指標 | Before | After |<br>
+| --- | --- | --- |<br>
+| 所要時間 |   |   |<br>
+| 抜け漏れ／ミス |   |   |<br>
+| 品質・一貫性 |   |   |<br>
+<br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+<strong>📚 4. 学びと次のステップ（配点 5点）</strong><br>
+━━━━━━━━━━━━━━━━━━━━━━━━<br>
+・実装で詰まったこと＆解決方法：<br>
+・応用したい業務：<br>
+・応用講座で深めたいテーマ：<br>
+<br>
+<strong>【スキルタグ】</strong>（外部の読者向けに、身につけたスキルを#タグで列挙）<br>
+例：#AIエージェント #n8n #ワークフロー自動化 #要件定義 #RAG #API連携 #AI要約
+</div>
+
+<hr>
+
+<h3>「対外的に見せられる」ための必須事項</h3>
+
+<div style="background: #fee2e2; border: 2px solid #dc2626; padding: 15px; margin: 15px 0; border-radius: 8px;">
+<strong>⚠️ 機密情報の扱い</strong><br>
+このドキュメントは卒業後にLinkedIn・note・社内LT・面接などで<strong>外部の人の目に触れる可能性</strong>があります。以下を必ず守ってください。
+<ul style="margin: 5px 0;">
+<li><strong>会社名・個人名・取引先名は抽象化する</strong>（例：「A社」「人材業界の中堅企業」「私のチーム」）</li>
+<li><strong>APIキー・トークン・パスワード等の認証情報が映るスクショを載せない</strong>（撮影前に画面を必ず確認）</li>
+<li><strong>社内しか知りえない固有数字・売上・顧客情報</strong>は載せない（影響を受けない範囲の定量指標に絞る）</li>
+<li><strong>誰かの個人情報（メアド・名前・連絡先）</strong>が映っているスクショは使わない</li>
+</ul>
+</div>
+
+<h3>ポートフォリオ品質に仕上げるコツ</h3>
+<ul>
+<li><strong>タイトルで何をしたか分かるように</strong>：「朝のAIニュース配信エージェント（毎日30分を0分に）」のような、成果が一言で伝わるタイトル</li>
+<li><strong>Beforeを定量的に</strong>：「時間がかかっていた」ではなく「週2.5時間かかっていた」。読み手が「それは助かりそう」と思える具体性</li>
+<li><strong>Afterにも定量を</strong>：主観ではなく「0分になった」「週3件の見落としが0件に」のように数字で表現</li>
+<li><strong>選定理由に思考プロセスを見せる</strong>：「n8nを選んだ」だけでなく「ZapierとComparing した結果、拡張性を優先してn8n」のように判断の過程を残す</li>
+<li><strong>構成図はシンプルに</strong>：Mermaid記法 or キャンバスの見やすいスクショ。複雑すぎる図は外部の読み手に伝わらない</li>
+<li><strong>スキルタグ</strong>：ATS（採用支援システム）やLinkedIn検索で引っかかるように、具体的なツール名・技術名で列挙</li>
+</ul>
+
+<hr>
+
+<h3>提出</h3>
+<p>雛形をコピー・記入したGoogleドキュメントのURLを、指定された提出フォームから提出してください。</p>
+
+<div style="background: #fee2e2; border: 2px solid #dc2626; padding: 15px; margin: 15px 0; border-radius: 8px;">
+<strong>提出前チェックリスト</strong>
+<ul style="margin: 5px 0;">
+<li>☐ AI+のGoogleアカウントで作成したGoogleドキュメントである</li>
+<li>☐ 共有設定が「AI+ 組織内のリンクを知っている全員が閲覧可」になっている</li>
+<li>☐ シークレットウィンドウでURLを開いて、ログイン画面を経由せずに閲覧できることを確認した</li>
+<li>☐ 4つのセクションすべてが記入されている</li>
+<li>☐ Before / After が定量データで示されている</li>
+<li>☐ 会社名・個人名・機密情報・APIキーが映っていない</li>
+<li>☐ スキルタグが記載されている</li>
+</ul>
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

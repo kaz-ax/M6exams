@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ルーブリック：M6 まとめ演習</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+.check-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+.check-table th, .check-table td { border: 1px solid #ccc; padding: 10px; text-align: left; vertical-align: top; }
+.check-table th { background-color: #f0f0f0; }
+.supplement-box { background-color: #fff9e6; border-left: 4px solid #f39c12; padding: 15px; margin: 15px 0; }
+</style>
+</head>
+<body>
+
+<h1>ルーブリック（採点基準）</h1>
+
+<h3>採点基準</h3>
+<p>合計30点満点で評価します。評価対象は、提出されたGoogleドキュメントに記載された<strong>4セクション</strong>の内容と、<strong>対外的に見せられるポートフォリオとしての完成度</strong>です。</p>
+
+<div class="supplement-box">
+<strong>採点前の形式・機密情報チェック</strong><br>
+以下のいずれかに該当する場合、内容の採点に入る前に再提出依頼してください：
+<ul style="margin: 5px 0;">
+<li>AI+のGoogleドキュメントではない／共有設定が組織外からアクセスできない</li>
+<li>4つのセクションのうち2つ以上が未記入</li>
+<li><strong>会社名・個人名・取引先の具体名</strong>が記載されている（抽象化されていない）</li>
+<li><strong>APIキー・トークン・パスワード</strong>が映っているスクリーンショットがある</li>
+<li>他者の個人情報（メアド・名前など）が映っている</li>
+</ul>
+<strong>⚠️ 機密情報漏洩の観点から、これらは必ず差し戻して修正してもらってください。</strong>
+</div>
+
+<table class="check-table">
+<tr>
+<th>観点</th>
+<th>OK（満点）</th>
+<th>惜しい（半分程度）</th>
+<th>NG（0点）</th>
+</tr>
+<tr>
+<td><strong>①業務課題（Before）</strong><br>（5点）</td>
+<td>対象業務・頻度・所要時間・現状の課題が具体的に書かれており、<strong>定量データ</strong>（週X時間、月Y件等）で現状を示している。外部の読み手が「これは解決する価値がある課題だ」と納得できる具体性。</td>
+<td>業務と課題は書かれているが、定量データが不足／「時間がかかる」のような主観的な記述が中心。</td>
+<td>業務説明のみで、課題・定量データが未記入。</td>
+</tr>
+<tr>
+<td><strong>②設計と実装</strong><br>（10点）</td>
+<td>要件定義の5要素が埋まり、8ツール中から選定したツールの理由がS7の比較を根拠に書かれ、ワークフロー構成図が提示されている。<strong>3要素（要件／選定／構成図）すべて揃っていること</strong>。</td>
+<td>3要素のうち1つが欠けている／要件定義が曖昧／選定理由が抽象的／構成図がない。</td>
+<td>3要素のうち2つ以上が欠けている。</td>
+</tr>
+<tr>
+<td><strong>③成果（After）</strong><br>（10点）</td>
+<td>実行結果のスクショ／出力例が提示され、<strong>Before/Afterの定量比較</strong>（テーブル形式が望ましい）で効果が示されている。「〇分から〇分」「月X件から0件」のような数字で語られている。</td>
+<td>実行結果はあるが、定量比較が主観的／Afterの数字が抽象的（「効率化された」など）。</td>
+<td>実行結果が未提示、またはBefore/After比較が未記載。</td>
+</tr>
+<tr>
+<td><strong>④学びと次のステップ</strong><br>（5点）</td>
+<td>実装で詰まったことと解決方法、応用したい業務、応用講座で深めたいテーマがそれぞれ書かれている。<strong>スキルタグ</strong>（#を含む）も記載されている。</td>
+<td>学びか次のステップのどちらかが記載されているが、もう一方が不足。スキルタグがない／少ない。</td>
+<td>未記入、または「勉強になった」のような抽象的な記述のみ。</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>採点の注意事項</h3>
+<div class="supplement-box">
+<p><strong>ケーススタディの内容は業務価値の大きさで評価しません。</strong>週10時間削減でも週30分削減でも、同じ4セクションの構成と定量比較が揃っていれば満点対象です。「大きなインパクトを出した人が高得点」ではなく「構成が整っている人が高得点」。</p>
+<p><strong>選んだエージェントの種類は不問。</strong>S5の完成版が推奨ですが、S3/S4/S6のフローを発展させたもの、あるいは自分の業務用に新規で作ったものでも可とします。「AIエージェント」として機能していれば何でも可。</p>
+<p><strong>Before/Afterが定量化できないケース</strong>：「属人化 → 誰でも運用可」「週3日ランダムに実施 → 毎日定刻に自動実行」など、<strong>再現性・定常性</strong>の改善も定量評価に準じる扱いにします。</p>
+<p><strong>ポートフォリオ品質のチェック</strong>：採点項目には含めませんが、<strong>卒業後の外部公開に耐えうる品質</strong>かをフィードバックで伝えてください。タイトル、スキルタグ、読みやすさ、定量性などを「もう一押しするとよい」観点として。</p>
+</div>
+
+<hr>
+
+<h3>フィードバックのポイント</h3>
+<div class="supplement-box">
+<p><strong>高評価のケース：</strong><br>
+4セクションが揃い、Before/Afterが定量データで示され、ツール選定がS7の比較を根拠にしており、スキルタグも適切に選ばれている場合、満点に近い評価です。「このままLinkedInに投稿してもいいレベル」という感想を添えると、卒業生のポートフォリオ活用意欲が高まります。</p>
+
+<p><strong>改善が必要なケース：</strong><br>
+Beforeが主観的な場合：「『時間がかかる』ではなく『週X時間』と書くと、読んだ人が『これは価値ある自動化だ』と瞬時に理解できます」と伝える。<br>
+Afterが曖昧な場合：「『効率化された』のような抽象表現ではなく『月10時間の手作業が0分に』のように数字を添えましょう。採用担当者が見ても価値が伝わります」。<br>
+選定理由が薄い場合：「S7で作った8ツール比較表の結果を反映させると、選定プロセスに説得力が出ます」と接続。</p>
+
+<p><strong>再提出を求めるケース：</strong><br>
+① Googleドキュメントの共有設定が「AI+ 組織内」になっていない、または採点者がシークレットウィンドウで閲覧できない<br>
+② 会社名・個人名・機密数字などがそのまま記載されている（外部公開時のリスク）<br>
+③ APIキー・トークンなどの機密情報がスクショに映っている（セキュリティ上即座に対応必須）<br>
+④ 4セクションのうち2つ以上が未記入<br>
+これらは必ず再提出を依頼してください。特に③は、検出し次第、現行のキーをRevoke（無効化）して再発行するよう受講生に伝えてください。</p>
+</div>
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

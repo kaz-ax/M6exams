@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 S7実習課題</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+table.ref-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 13px; }
+table.ref-table th, table.ref-table td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
+table.ref-table th { background-color: #f0f0f0; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>この課題のねらいは、<strong>「道具を比べて選ぶ力」</strong>を言語化することです。</p>
+<p>モジュール5・6でたくさんのツールに触れてきましたが、実務の現場で<strong>最大の成果を生むのは「目的に合った道具を選ぶ判断」</strong>です。どんなに高機能なツールでも、業務に合っていなければ効果は出ません。逆に、シンプルなツールでも選び方が的確なら大きな成果につながります。</p>
+<p>この判断力は、新しいツールが次々に登場する中でも<strong>陳腐化しない普遍的なスキル</strong>です。ツール名が変わっても、「この課題にはどの特性のツールが必要か」を4軸で整理して考える型は、ずっと使い続けられます。</p>
+</div>
+
+<hr>
+
+<h3>4軸で比較する意味</h3>
+<p>ツール選定は感覚ではなく、<strong>明示的な判断軸</strong>で行うべきです。動画4で紹介した4軸はそれぞれ以下の意味を持ちます。</p>
+
+<ul>
+<li><strong>コスト</strong>：短期・中期の金銭コスト。無料枠・有料プラン・従量課金を把握しないと、運用が始まってから「思ったより高い」となりやすい</li>
+<li><strong>難易度</strong>：導入コスト＝誰が作るか／使うかで決まる。非エンジニアが触るならZapier、エンジニア／セミエンジニアならn8nが候補になる</li>
+<li><strong>拡張性</strong>：将来の伸びしろ。最初は小さく始めても、業務が育ったとき他システムと繋げられるかで価値が変わる</li>
+<li><strong>得意領域</strong>：そのツールが最も輝くタスク。「万能なツール」は無いので、タスク特性と合うものを選ぶ</li>
+</ul>
+
+<p>この4軸のうち、<strong>自分の業務ではどれを優先するか</strong>を決めてから比較表を埋めるのがコツです。</p>
+
+<hr>
+
+<h3>8ツールの特徴まとめ</h3>
+
+<h4>単体Bot型（M5）</h4>
+<table class="ref-table">
+<tr><th>ツール</th><th>コスト</th><th>難易度</th><th>拡張性</th><th>得意領域</th></tr>
+<tr>
+<td><strong>GPTs</strong></td>
+<td>ChatGPT Plus必要<br>（月額$20）</td>
+<td>低<br>（プロンプトで作れる）</td>
+<td>中<br>（Actionsで外部連携可、設計やや複雑）</td>
+<td>対話型アシスタント、定型業務の効率化</td>
+</tr>
+<tr>
+<td><strong>Gems</strong></td>
+<td>無料プランあり<br>（Workspace契約で豊富）</td>
+<td>低<br>（プロンプトで作れる）</td>
+<td>中<br>（Google系ツールと密連携）</td>
+<td>Googleサービス連携、検索・深掘り調査</td>
+</tr>
+<tr>
+<td><strong>NotebookLM</strong></td>
+<td>無料</td>
+<td>低<br>（資料をアップロードするだけ）</td>
+<td>狭<br>（単独使用が基本、Gemsとの連携可）</td>
+<td>RAG／資料の読み込み・引用付き回答・要約</td>
+</tr>
+</table>
+
+<h4>ワークフロー型（M5 & M6）</h4>
+<table class="ref-table">
+<tr><th>ツール</th><th>コスト</th><th>難易度</th><th>拡張性</th><th>得意領域</th></tr>
+<tr>
+<td><strong>Google Workspace Studio</strong></td>
+<td>無料<br>（Workspace契約必須）</td>
+<td>低〜中<br>（テンプレートから構築）</td>
+<td>狭〜中<br>（Google系サービスが中心）</td>
+<td>Google系アプリ横断の軽量自動化、議事録やメール</td>
+</tr>
+<tr>
+<td><strong>n8n</strong></td>
+<td>無料トライアル／月額€24〜<br>（セルフホストで無料）</td>
+<td>中〜高<br>（ノード理解が必要）</td>
+<td>広<br>（API経由で何でも繋がる）</td>
+<td>汎用ワークフロー、業務エージェント、外部API連携</td>
+</tr>
+<tr>
+<td><strong>Zapier</strong></td>
+<td>無料プランあり<br>（月100タスク、拡張は従量）</td>
+<td>低<br>（Copilotで自然言語生成可）</td>
+<td>広<br>（6,000以上のアプリ連携）</td>
+<td>非エンジニアの軽量アプリ連携、短工程の自動化</td>
+</tr>
+</table>
+
+<h4>AIアプリ／エージェント型（M6）</h4>
+<table class="ref-table">
+<tr><th>ツール</th><th>コスト</th><th>難易度</th><th>拡張性</th><th>得意領域</th></tr>
+<tr>
+<td><strong>Dify</strong></td>
+<td>無料プランあり<br>（サンドボックス）</td>
+<td>中<br>（プロンプト設計の試行が主）</td>
+<td>中<br>（APIで外部から呼び出し可）</td>
+<td>対話型AIアプリ、プロンプト設計を磨く用途</td>
+</tr>
+<tr>
+<td><strong>Manus</strong></td>
+<td>クレジット消費<br>（無料枠あり、すぐ消費）</td>
+<td>低（指示出しは簡単）／結果確認が重要</td>
+<td>中〜広<br>（自律的にWeb検索・資料生成）</td>
+<td>調査・レポート作成の自律実行、競合分析</td>
+</tr>
+</table>
+
+<hr>
+
+<h3>回答例：毎朝の競合ニュース収集業務を自動化する場合</h3>
+
+<h4>1. 対象業務の明確化</h4>
+<div class="example-box">業務名：競合3社のプレスリリース・ブログ記事を毎朝収集し、Slackに要約投稿
+頻度：毎日1回、朝9:00
+現状の所要時間：30〜40分（3サイトを手動巡回、重要な記事をコピペで要約）
+現状の課題：
+・情報ソースが散らばっており、毎朝集めるのに時間がかかる
+・忙しい日はスキップしてしまい、チーム全体の情報感度が下がる
+・要約の粒度が人によってブレる</div>
+
+<h4>3. 選定ツールと理由（抜粋）</h4>
+<div class="example-box">選んだツール：n8n（メイン）＋ Dify（要約アプリ）の組み合わせ
+
+選定理由：
+今回の業務で重視した軸は「拡張性」と「長期運用のコスト」の2つ。
+
+まず拡張性について。競合の公式ブログはRSS配信しており、これを n8n の RSS Feed Read ノードで
+取り込めば定時取得は容易に実装できる。将来、競合数を増やしたり、Slack以外（メール、Notion等）
+への配信を追加したくなっても、ノードを足すだけで対応できる拡張性が魅力。Zapierでも同様の
+ことは可能だが、月100タスクの無料枠だと3社×毎日=93タスクで枠を使い切る見込みで、
+中期的にはn8nのほうがコスト面で優位。
+
+要約の質にはこだわりたいので、プロンプト設計を磨き込めるDifyで「競合ニュース要約アプリ」
+を別途構築し、n8nのHTTPリクエストで呼び出す構成を採用。DifyはUI上でプロンプトを
+試行錯誤できるため、「何の会社か／何が起きたか／なぜ重要か」の3行要約の品質を
+高めやすい。
+
+他ツールは以下の理由で見送り：
+・GPTs/Gems：定時実行との相性が良くない
+・NotebookLM：定期取得の自動化には向かない
+・Manus：クレジット消費が読めず毎日実行には不向き
+・Google Workspace Studio：Google外サービス（Slack等）との連携が弱い</div>
+
+<h4>4. ツール組み合わせ提案（抜粋）</h4>
+<div class="example-box">構成：
+[n8n] Schedule Trigger（毎朝9時）
+  ↓
+[n8n] RSS Feed Read（競合3社のRSSを取得）
+  ↓
+[n8n] HTTP Request（Dify の要約アプリを呼び出し）
+  ↓
+[Dify] 競合ニュース要約アプリ（3行要約を返す）
+  ↓
+[n8n] Slack Send Message（指定チャンネルに投稿）
+
+メリット：
+・定時実行と外部連携は n8n に任せ、AI要約の品質改善は Dify に閉じ込める
+・要約プロンプトを Dify 側で改善する際、n8n の設定を触らずに済む
+・将来、別チームから「Dify の要約アプリを直接使いたい」という要望が来た場合も
+  Dify 単体で提供できる</div>
+
+<hr>
+
+<h3>実務での使い分け判断の定石</h3>
+
+<div class="tip-box">
+<p><strong>迷ったときの典型パターン：</strong></p>
+<ul>
+<li><strong>「まず動くものを見せたい」</strong>→ GPTs／Gems／Zapier（Copilot）で素早くプロトタイプ</li>
+<li><strong>「社内資料を参照させたい」</strong>→ NotebookLM（単独）or Gems（NotebookLM連携）</li>
+<li><strong>「Google系ツールで完結できる」</strong>→ Google Workspace Studio</li>
+<li><strong>「業務フロー全体を自動化したい」</strong>→ n8n</li>
+<li><strong>「AI対話部分を磨き込みたい」</strong>→ Dify</li>
+<li><strong>「調査・分析を丸投げしたい」</strong>→ Manus</li>
+</ul>
+<p><strong>組み合わせの定石：</strong></p>
+<ul>
+<li>Difyで作ったAIアプリをn8nから呼び出す（今回の回答例のパターン）</li>
+<li>NotebookLMで蓄積した知識をGemsから参照（社内Q&A）</li>
+<li>Manusで定期調査 → n8nで結果をメール配信</li>
+</ul>
+</div>
+
+<hr>
+
+<h3>S7がポートフォリオにつながる</h3>
+<p>S7で作った比較表と選定レポートは、次の<strong>まとめ演習（ケーススタディ）</strong>の土台になります。まとめ演習では、S7で選定したツールで実際にエージェントを構築した成果を「対外的に見せられる1枚資料」にまとめ上げます。</p>
+<p>つまり、S7は「頭で考える」フェーズ、まとめは「成果を見せる」フェーズです。S7をしっかり書き込んでおくと、まとめ演習の作成が格段に楽になります。</p>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。4軸の立て方やツール選定の考え方について、具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

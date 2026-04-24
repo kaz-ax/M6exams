@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>解説プレビュー：M6 まとめ演習</title>
+<style>
+body { font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8; }
+h1 { font-size: 1.5em; border-bottom: 2px solid #333; padding-bottom: 10px; }
+h3 { margin-top: 30px; }
+h4 { margin-top: 25px; color: #333; }
+hr { margin: 20px 0; border: none; border-top: 1px solid #ccc; }
+ul li, ol li { margin-bottom: 10px; }
+.purpose-box { background-color: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.tip-box { background-color: #f0f7e6; border-left: 4px solid #27ae60; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0; }
+.example-box { background-color: #f5f5f5; border: 1px solid #ddd; padding: 15px; margin: 15px 0; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<h1>解説と回答例</h1>
+
+<h3>この課題のねらい</h3>
+<div class="purpose-box">
+<p>このまとめ演習のねらいは、<strong>「作ったものを語れるレベルに昇華させること」</strong>です。</p>
+<p>モジュール5〜6を通してたくさんのスキルを学び、実際に動くエージェントも作ってきました。しかし、身につけたスキルを<strong>外部の人に伝える</strong>となると、また別の力が必要です。「何の課題を」「どんな設計で」「どれだけの成果を出したか」を、構造化された1枚にまとめる力。これは、転職面接、社内プレゼン、LinkedIn投稿、クライアント提案 ── どんな場面でも使える<strong>ポータブルなスキル</strong>です。</p>
+<p>本演習は、AI+基礎編の<strong>締めくくり</strong>であり、同時に卒業後の<strong>AIスキル証明書</strong>としても機能する設計です。</p>
+</div>
+
+<hr>
+
+<h3>なぜ「ケーススタディ形式」か</h3>
+<p>一般的に、AIや技術スキルの対外的な示し方は2パターンあります：</p>
+<ol>
+<li><strong>A. 持っているスキル列挙型</strong>（「n8n使えます、Dify使えます…」）：薄く広く見せられるが、深さが伝わらない</li>
+<li><strong>B. ケーススタディ型</strong>（「〇〇業務の手作業を週2.5時間削減した」）：1件に絞り込むが、<strong>深い実装力</strong>と<strong>課題解決力</strong>が一発で伝わる</li>
+</ol>
+<p>特に最近の採用市場では「何ができる」より「何を解決できた」が重視されます。B型のケーススタディは、実績を持たない卒業生が<strong>「このレベルの課題を自力で解けます」</strong>と示せる最強の武器になります。</p>
+
+<hr>
+
+<h3>「Before / After」を定量的に書くことの威力</h3>
+<div class="tip-box">
+<p>ポートフォリオの成否を分ける最大のポイントは、<strong>Before / After が数字で示されているか</strong>です。</p>
+<p><strong>❌ 主観的（弱い）</strong></p>
+<ul>
+<li>「情報収集が効率化された」</li>
+<li>「時間が短くなった」</li>
+<li>「ミスが減った」</li>
+</ul>
+<p><strong>✅ 定量的（強い）</strong></p>
+<ul>
+<li>「週5日×30分の情報収集作業 → <strong>0分</strong>に（月10時間の削減）」</li>
+<li>「平均処理時間 45秒 → <strong>12秒</strong>（75%短縮）」</li>
+<li>「月3件の送付漏れ → <strong>0件</strong>（直近3ヶ月連続で0件を維持）」</li>
+</ul>
+<p>定量化できるものがない場合でも、<strong>「以前は属人化していた業務が、新人でも2時間で再現できるフォーマットになった」</strong>のように、<strong>再現性</strong>を指標として示すことができます。</p>
+</div>
+
+<hr>
+
+<h3>回答例：朝のAIニュースブリーフィングエージェント</h3>
+
+<h4>タイトル部分の例</h4>
+<div class="example-box">【タイトル】朝のAIニュースブリーフィングエージェント
+　　　　　　　毎朝30分の情報収集を完全自動化し、月10時間を創出
+【使用したツール】n8n, Google Gemini API, Slack, RSS Feed Read
+【解決した課題】毎朝の業界ニュース収集・要約・チーム共有の手作業を0分に
+【スキルタグ】#AIエージェント #n8n #ワークフロー自動化 #要件定義
+　　　　　　　 #RSS #Gemini #Slack連携 #AI要約</div>
+
+<h4>🎯 1. 業務課題（Before）</h4>
+<div class="example-box">・対象業務：HRテック業界の最新ニュース収集と、人事定例チャンネルへの共有
+・頻度：平日毎朝（週5日、月20日）
+・現状の所要時間／人的コスト：1回30〜40分、担当者1名が毎朝実施
+
+・現状の課題：
+  ・情報ソース（3サイト×平均10記事）を巡回する時間が負担
+  ・忙しい日はスキップしてしまい、週2日は未共有になる
+  ・手動要約の粒度が人によって揺れ、月3件ほどの抜け漏れが発生
+
+・定量データ：
+  週5日 × 35分 = 週2.9時間、月間で約11.6時間の稼働
+  月3件の情報見逃し（重要リリース含む）
+  属人化度：担当者1名、代打できる人なし</div>
+
+<h4>💡 2. 設計と実装</h4>
+<div class="example-box">2-1. 要件定義（5要素）
+| 項目 | 内容 |
+| --- | --- |
+| ① 自動化したい業務 | HRテック業界3サイトのRSS取得→要約→Slack投稿 |
+| ② トリガー | 平日朝9:00（Schedule Trigger） |
+| ③ 処理の流れ | RSS取得 → AI 3行要約 → 関連性フィルタ → Slack投稿 |
+| ④ 入出力 | 入：RSS URL×3、時間範囲(過去24時間) ／ 出：Slackメッセージ |
+| ⑤ 使用サービス・成功条件 | n8n/RSS/Gemini/Slack／平日9時までに投稿・抜け漏れ0件 |
+
+2-2. ツール選定
+・選んだツール：n8n（メイン）
+・選定理由：
+  S7の8ツール比較で「拡張性」と「中期的なコスト」を優先軸に置いた結果、
+  n8nが最適と判断。Zapierも候補だったが、想定タスク数（月60〜90件）は
+  Zapier無料枠の月100タスクギリギリで、競合を増やす将来を考えると
+  スケーラビリティに不安。n8nはセルフホスト化もできるため長期運用の
+  コストを抑えられる。
+
+2-3. ワークフロー構成図
+[Schedule Trigger (Mon-Fri 9:00)]
+         ↓
+[RSS Feed Read × 3 sources]
+         ↓
+[Merge Nodes]
+         ↓
+[Gemini (3行要約)]
+         ↓
+[If: 関連キーワード含む?]
+         ↓ Yes
+[Slack Send Message]</div>
+
+<h4>✅ 3. 成果（After）</h4>
+<div class="example-box">3-1. 実行結果
+（Slackチャンネル「#人事定例」に届いた投稿例のスクリーンショット）
+
+📰 今日のHRテック関連ニュース（2026-04-24）
+・SmartHR、AI面接分析機能を公開。採用担当の工数を30%削減見込み
+　https://techcrunch.com/...
+・厚労省、テレワークガイドライン改定。週3日以上のリモート勤務を推奨
+　https://www.mhlw.go.jp/...
+・大手人材会社、AI面接官を試験導入し一次面接の工数60%削減
+　https://...
+
+3-2. 効果（定量）
+| 指標 | Before | After |
+| --- | --- | --- |
+| 所要時間 | 週2.9時間 | 0分（完全自動） |
+| 月間稼働 | 約11.6時間 | 0時間（月11時間を創出） |
+| 未共有日 | 週1-2日 | 0日（3ヶ月連続） |
+| 情報見逃し | 月3件 | 月0件（キーワード検知で網羅） |
+| 属人化 | 担当1名に依存 | 自動化で誰でも運用可 |</div>
+
+<h4>📚 4. 学びと次のステップ</h4>
+<div class="example-box">・実装で詰まったこと＆解決方法：
+　RSSノードの結果が配列形式になっており、AI要約ノードで各記事を
+　個別処理するために「Run Once for Each Item」設定が必要だったが
+　当初気づかず1記事しか処理されなかった。Inputタブで出力構造を
+  確認することで原因特定。
+
+・応用したい業務：
+　・競合プレスリリースの自動収集（同じ構造で別RSSを入れ替え）
+　・採用フォーム応募の自動分類（Webhook型に発展）
+
+・応用講座で深めたいテーマ：
+　・n8nセルフホスト環境の構築（コスト削減と制約撤廃）
+　・複数エージェント連携による業務全体の自動化</div>
+
+<hr>
+
+<h3>卒業後のポートフォリオ活用例</h3>
+<div class="tip-box">
+<p><strong>📌 LinkedIn投稿</strong>：「AI+基礎編を修了。実装したエージェントの詳細はこちら」と本ドキュメントをリンク。業界の他社担当者や採用関係者に発見されやすくなる。</p>
+<p><strong>📌 面接・カジュアル面談</strong>：「AIエージェントを構築した実績があります」だけでなく、本ドキュメントを見せながら「このように課題解決しました」と具体的に語れる。</p>
+<p><strong>📌 社内LT・共有会</strong>：チーム全員に見せて「こういう業務もAIで自動化できる」と提案する基礎資料にする。</p>
+<p><strong>📌 職務経歴書への添付</strong>：「AI活用実績」欄で本ドキュメントURL（または匿名化したPDF版）を添付。</p>
+<p><strong>📌 副業・フリーランス</strong>：クライアントに提案する際、「こういうレベルの自動化が可能です」と実例提示に使える。</p>
+</div>
+
+<hr>
+
+<h3>基礎編6モジュールのポートフォリオ合体</h3>
+<p>AI+基礎編の各モジュールのまとめ演習は、すべてポートフォリオとして機能する設計です。卒業時には<strong>6本のケーススタディ</strong>が揃います：</p>
+<ul>
+<li>M1：生成AIを自分の武器にする（AI導入の考え方）</li>
+<li>M2：プロンプトエンジニアリング（効果的な指示出し）</li>
+<li>M3：画像・映像生成（クリエイティブ活用）</li>
+<li>M4：Webサイト・スライド・動画制作（マルチメディア制作）</li>
+<li>M5：Bot・RAG・ワークフロー（定型業務の自動化）</li>
+<li><strong>M6：AIエージェント実装（業務が自走する仕組み）</strong>← 本演習</li>
+</ul>
+<p>これらを束ねて「AI活用ポートフォリオ集」として1つのページにまとめておくと、<strong>広さと深さ両方の証明</strong>になります。LinkedInプロフィール、ホームページ、noteのマガジン、などの形で公開運用していくのがおすすめです。</p>
+
+<hr>
+
+<div class="purpose-box">
+解説を読んでもいまいちわからない場合は、AIに質問してみましょう。ケーススタディの構成やBefore/Afterの書き方について、具体的なアドバイスがもらえます。<br>
+※ モジュール6専用のAI溝口は近日公開予定です。それまでは Gemini / ChatGPT を使って相談してください。
+</div>
+
+
+
+<script src="https://giscus.app/client.js"
+  data-repo="kaz-ax/M6exams"
+  data-repo-id="R_kgDOSFFcPA"
+  data-category="General"
+  data-category-id="DIC_kwDOSFFcPM4C7DLx"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="light"
+  data-lang="ja"
+  crossorigin="anonymous"
+  async>
+</script>
+
+
+</body>
+</html>

@@ -61,8 +61,14 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 <div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
 <strong>認証系エラーの起こし方（どれか1つでOK）</strong>
 <ul style="margin: 5px 0;">
-<li>Credentialsに保存されているAPIキーを<strong>1文字書き換える</strong>（保存後に"Test"でエラー確認）</li>
-<li>ノードのCredentials選択を<strong>別の無効なCredentials</strong>に切り替える</li>
+<li><strong>Credentialsに保存されているAPIキーを1文字書き換える</strong>
+　<ul style="margin: 3px 0;">
+　<li>手順：①左サイドバーの「Credentials」を開く → ②対象のCredentialをクリックして開く → ③ API Key欄を1文字だけ編集（例：末尾の文字を書き換える）→ ④「Save」で保存</li>
+　<li>保存後、Credential編集画面にある「Test」ボタンで認証失敗になることを確認してから、ワークフロー側で実行するとエラーが発生する</li>
+　<li>後で元に戻せるよう、<strong>元のキー値をメモしておく</strong>ことを忘れずに</li>
+　</ul>
+</li>
+<li>ノードのCredentials選択を<strong>別の無効なCredentials</strong>に切り替える（空のCredentialsを新規作成して参照先を変えるなど）</li>
 <li>HTTP Requestノードで、Headerに仮の無効トークンを直接記入する（この課題中だけの例外、後でCredentials参照に戻す）</li>
 </ul>
 </div>

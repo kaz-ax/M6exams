@@ -106,10 +106,25 @@ hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
 <p>基本構成の例（HTTP Request型）：</p>
 <ol>
 <li><strong>Manual Trigger</strong>（または Schedule Trigger）</li>
-<li><strong>HTTP Request</strong>：ステップ①で選んだAPIを叩く。認証は<strong>Credentialsから参照</strong>する設定にする</li>
-<li><strong>AI（Gemini / OpenAI）</strong>：取得したデータを要約／整形／判定させる（プロンプトは日本語でOK）</li>
+<li><strong>HTTP Request</strong>：ステップ①で選んだAPIを叩く。認証は下記の手順で<strong>Credentialsから参照</strong>する（URL・Headerに直書きしない）</li>
+<li><strong>AI（Gemini / OpenAI）</strong>：取得したデータを要約／整形／判定させる（プロンプトは日本語でOK）。AIノードも同様にCredentialsを参照する</li>
 <li><strong>Set（Edit Fields）</strong>または出力ノード：最終メッセージを整形（Slackやメール送信は任意）</li>
 </ol>
+
+<div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
+<strong>HTTP RequestノードでCredentialsを参照する手順</strong>
+<ol style="margin: 5px 0;">
+<li>HTTP Requestノードを開く</li>
+<li>「<strong>Authentication</strong>」で認証方式を選択：
+　<ul>
+　<li>APIに専用のCredentialsタイプがある場合（例：OpenWeatherMap など）：「Predefined Credential Type」→ Credential Type を選ぶ</li>
+　<li>汎用APIキーの場合：「Generic Credential Type」→ さらに「<strong>HTTP Header Auth</strong>」または「<strong>HTTP Query Auth</strong>」など、APIが要求する形式を選ぶ</li>
+　</ul>
+</li>
+<li>「Credential for ...」欄で、<strong>ステップ③で作成したCredentials</strong>を選択する</li>
+<li>URL・Header・Body欄にはキーを直接書かない（Credentials側で管理される）</li>
+</ol>
+</div>
 
 <div style="background: #e8f4f8; border-left: 4px solid #3498db; padding: 15px; margin: 15px 0; border-radius: 0 8px 8px 0;">
 <strong>ヒント：AIに骨組みを書かせて良い</strong><br>

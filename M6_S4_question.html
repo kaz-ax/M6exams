@@ -124,7 +124,19 @@ Open-Meteo APIで東京の現在の気象データを取得し、Geminiに渡し
 </li>
 </ul>
 
-<p><strong>取得できるOutputの例：</strong>上の図の右側のように、現在時刻の緯度・経度・気温・湿度・天気コード・風速などがJSON形式で返ってきます。この結果を次のAIノードに渡して、「晴れ／気温18度なので薄手のジャケットがおすすめです」のような日本語の要約文に変換するのが後段の処理です。</p>
+<p><strong>取得できるOutputの例：</strong>上の図の右側のように、現在時刻の緯度・経度・気温・湿度・天気コード・風速などがJSON形式で返ってきます。この結果を次のAIノードに渡して、日本語の要約文に変換するのが後段の処理です。</p>
+
+<p><strong>ワークフロー全体を実行した結果の例：</strong></p>
+
+<figure style="margin: 15px 0; text-align: center;">
+<img src="images/s4/s4_sample_output.png" alt="最終メッセージ整形ノードのOutput。weatherReportに日本語の天気＆服装アドバイス、generatedAtに生成日時が入っている" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 6px;">
+<figcaption style="font-size: 13px; color: #777; margin-top: 8px;">最終ノードのOutput：AIが生成した日本語の天気＆服装アドバイスが <code>weatherReport</code> フィールドに格納されている</figcaption>
+</figure>
+
+<p>たとえば上の実行では、以下のような意図通りの日本語アドバイスが返ってきています：</p>
+<blockquote style="margin: 10px 0; padding: 10px 15px; background: #fff; border-left: 3px solid #27ae60; font-style: italic; color: #333;">
+はい、承知いたしました！今日の東京は、晴れ間が見えるものの、少し肌寒いですね。気温は13.7℃、湿度も高いので、薄手の羽織ものがあると安心ですよ。
+</blockquote>
 
 <p style="margin-top: 10px;"><strong>応用のヒント：</strong>緯度経度を変えれば他の都市に変更できます（例：ニューヨーク 40.7128, -74.0060／大阪 34.6937, 135.5023）。<code>current</code> に指定する項目を変えれば取得データの内容も調整できます（<a href="https://open-meteo.com/en/docs" target="_blank">公式ドキュメント</a>参照）。</p>
 </div>
